@@ -4,6 +4,48 @@ A comprehensive collection of AI-powered engineering agents and knowledge bases 
 
 ---
 
+## Summary
+
+> **Quick access to all playbook content with descriptions.**
+
+### Agents
+
+| Agent | Description | Link |
+|-------|-------------|------|
+| **Backend Engineer** | Senior engineer expert in Java, Go, Node.js, TypeScript, Kotlin, Python. Covers design patterns (GoF 23), SOLID principles, Clean Architecture, system design, and testing strategies. | [View](agents/backend.md) |
+| **Backend Reviewer** | Code review specialist enforcing PR standards, Conventional Comments (blocker, issue, suggestion, nit), CI/CD quality gates, security and performance checks. | [View](agents/backend-reviewer.md) |
+| **Frontend Engineer** | Senior engineer expert in React, Vue.js, TypeScript, Next.js, Nuxt. Covers state management, component patterns, accessibility (WCAG), Core Web Vitals, and modern tooling. | [View](agents/frontend.md) |
+| **Frontend Reviewer** | Code review specialist enforcing accessibility standards, Core Web Vitals (LCP, INP, CLS), TypeScript strict mode, XSS prevention, and UX best practices. | [View](agents/frontend-reviewer.md) |
+| **Mobile Engineer** | Senior engineer expert in Flutter/Dart, Android (Kotlin/Compose), iOS (Swift/SwiftUI). Covers MVVM, MVI, Clean Architecture, and platform-specific patterns. | [View](agents/mobile.md) |
+| **Mobile Reviewer** | Code review specialist enforcing platform guidelines (Material 3, HIG), performance (60fps, no ANR), memory management, and mobile accessibility. | [View](agents/mobile-reviewer.md) |
+
+### Knowledge Base
+
+| Topic | Description | Link |
+|-------|-------------|------|
+| **Design Patterns** | All 23 Gang of Four patterns with code examples. Modern patterns: Repository, CQRS, Event Sourcing, Saga, Circuit Breaker. | [View](agents/knowledge/design-patterns.md) |
+| **Engineering Principles** | SOLID principles with detailed examples. KISS, DRY, YAGNI, WET, GRASP. Law of Demeter, Composition over Inheritance, Clean Architecture. | [View](agents/knowledge/engineering-principles.md) |
+| **System Design** | Big O notation reference tables. Architectural patterns (Monolith, Microservices, Event-Driven, Serverless). Distributed systems, CAP theorem, database selection. | [View](agents/knowledge/system-design.md) |
+| **Testing Strategies** | Testing pyramid and philosophy. Unit, mutation, integration testing. Frameworks by language (JUnit, pytest, Jest, Vitest). Test Containers, Pact, k6. | [View](agents/knowledge/testing-strategies.md) |
+| **Frontend Development** | React/Vue component patterns (Compound, Render Props, Hooks). State management (Zustand, Pinia, TanStack Query). Performance, accessibility, security patterns. | [View](agents/knowledge/frontend-development.md) |
+| **Mobile Development** | Flutter/Android/iOS architecture patterns. MVVM, MVI, Clean Architecture by platform. State management, performance optimization, platform-specific testing. | [View](agents/knowledge/mobile-development.md) |
+| **Code Review Guidelines** | Conventional Comments system with prefixes. Review checklists for correctness, security, performance. Feedback techniques and response templates. | [View](agents/knowledge/code-review-guidelines.md) |
+| **PR Templates** | Standard PR template with all sections. Specialized templates: Bug Fix, Feature, Refactor, Database Migration, Hotfix, Dependency Update. | [View](agents/knowledge/pr-templates.md) |
+| **Labels Conventions** | Complete GitHub label taxonomy. Categories: Type, Priority, Size, Status, Review. Color codes and automation setup with GitHub Actions. | [View](agents/knowledge/labels-conventions.md) |
+| **CI/CD Quality Gates** | Pipeline quality gates: build, test, security, coverage. SonarQube integration. Branch protection rules. Complete GitHub Actions examples. | [View](agents/knowledge/cicd-quality-gates.md) |
+
+### Resources
+
+| Category | Description | Link |
+|----------|-------------|------|
+| **Newsletters** | AI engineering newsletters: THE CODE, Every, JP, Joe Njenga. Featured articles on Claude Code and AI-assisted development. | [View](resources/#newsletters) |
+| **Courses** | Structured learning paths for Claude Code. Beginner to advanced courses on agentic coding and AI-assisted software engineering. | [View](resources/#long-courses) |
+| **GitHub Repos** | Curated repositories: claude-code-cheat-sheet, claude-code-template, awesome-claude-skills, awesome-mcp-servers, claude-code-workflows. | [View](resources/#github-repositories) |
+| **YouTube Tutorials** | Video guides: Setup and installation, workflows for 2025, Claude Code skills, multi-agent development, practical projects. | [View](resources/#youtube-tutorials) |
+| **Creators to Follow** | Industry experts sharing AI development insights on LinkedIn (Ray Amjad, Joe Njenga, Daniel Avila) and X (Thariq, Boris Cherny). | [View](resources/#creators-to-follow) |
+
+---
+
 ## The Philosophy: Context-Driven AI Usage
 
 <p align="center">
@@ -23,61 +65,6 @@ A comprehensive collection of AI-powered engineering agents and knowledge bases 
 Without Context: AI generates → Code that "works" → Tech debt
 With Context:    Human guides → AI generates → Value delivered
 ```
-
----
-
-## Quick Navigation
-
-### [Agents](agents/)
-
-AI agent definitions with expertise and behavioral guidelines.
-
-#### Backend
-| Agent | Description | Link |
-|-------|-------------|------|
-| **Backend Engineer** | Java, Go, Node, Python, Kotlin. Design patterns, SOLID, system design. | [View](agents/backend.md) |
-| **Backend Reviewer** | PR standards, Conventional Comments, CI/CD quality gates. | [View](agents/backend-reviewer.md) |
-
-#### Frontend
-| Agent | Description | Link |
-|-------|-------------|------|
-| **Frontend Engineer** | React, Vue.js, TypeScript, Next.js, Nuxt. State management, a11y. | [View](agents/frontend.md) |
-| **Frontend Reviewer** | Accessibility, Core Web Vitals, UX, security (XSS). | [View](agents/frontend-reviewer.md) |
-
-#### Mobile
-| Agent | Description | Link |
-|-------|-------------|------|
-| **Mobile Engineer** | Flutter, Android (Kotlin), iOS (Swift). MVVM, Clean Architecture. | [View](agents/mobile.md) |
-| **Mobile Reviewer** | Platform guidelines, performance, accessibility. | [View](agents/mobile-reviewer.md) |
-
-### [Knowledge Base](agents/knowledge/)
-
-Reference materials for engineering best practices.
-
-| Topic | Description | Link |
-|-------|-------------|------|
-| **Design Patterns** | GoF 23 + modern patterns (CQRS, Saga, Event Sourcing) | [View](agents/knowledge/design-patterns.md) |
-| **Engineering Principles** | SOLID, KISS, DRY, YAGNI, GRASP, Clean Architecture | [View](agents/knowledge/engineering-principles.md) |
-| **System Design** | Big O, architectures, distributed systems, CAP theorem | [View](agents/knowledge/system-design.md) |
-| **Testing Strategies** | Unit, mutation, integration testing by language | [View](agents/knowledge/testing-strategies.md) |
-| **Frontend Development** | React/Vue patterns, state management, performance | [View](agents/knowledge/frontend-development.md) |
-| **Mobile Development** | Flutter/Android/iOS patterns, MVVM, MVI | [View](agents/knowledge/mobile-development.md) |
-| **Code Review Guidelines** | Conventional Comments, checklists, feedback | [View](agents/knowledge/code-review-guidelines.md) |
-| **PR Templates** | Standard, bug fix, feature, refactor, hotfix | [View](agents/knowledge/pr-templates.md) |
-| **Labels Conventions** | GitHub label taxonomy with colors | [View](agents/knowledge/labels-conventions.md) |
-| **CI/CD Quality Gates** | Pipeline checks, branch protection, SonarQube | [View](agents/knowledge/cicd-quality-gates.md) |
-
-### [Resources](resources/)
-
-Curated learning materials for AI-assisted development.
-
-| Category | Description | Link |
-|----------|-------------|------|
-| **Newsletters** | THE CODE, Every, JP, Joe Njenga | [View](resources/#newsletters) |
-| **Courses** | Claude Code structured learning paths | [View](resources/#long-courses) |
-| **GitHub Repos** | Cheat sheets, templates, awesome lists | [View](resources/#github-repositories) |
-| **YouTube** | Setup guides, workflows, tutorials | [View](resources/#youtube-tutorials) |
-| **Creators** | Industry experts to follow | [View](resources/#creators-to-follow) |
 
 ---
 
