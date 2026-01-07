@@ -137,23 +137,27 @@ This playbook provides structured guidelines, best practices, and reusable knowl
 eng-delivery-playbook/
 ├── README.md                         # This file
 ├── context-vs-onboarding.png         # AI usage philosophy diagram
-└── agents/
-    ├── backend.md                    # Backend Engineer Agent
-    ├── backend-reviewer.md           # Code Review Agent
-    └── knowledge/
-        ├── index.md                  # Knowledge base navigation
-        │
-        │   # Backend Engineering
-        ├── design-patterns.md        # GoF 23 + Modern patterns
-        ├── engineering-principles.md # SOLID, KISS, DRY, GRASP
-        ├── system-design.md          # Architecture & Big O
-        ├── testing-strategies.md     # Unit, Mutation, Integration
-        │
-        │   # Code Review & Quality
-        ├── code-review-guidelines.md # Review process & feedback
-        ├── pr-templates.md           # Pull request templates
-        ├── labels-conventions.md     # GitHub labels system
-        └── cicd-quality-gates.md     # CI/CD pipeline checks
+│
+├── agents/                           # AI Agent Definitions
+│   ├── backend.md                    # Backend Engineer Agent
+│   ├── backend-reviewer.md           # Code Review Agent
+│   └── knowledge/
+│       ├── index.md                  # Knowledge base navigation
+│       │
+│       │   # Backend Engineering
+│       ├── design-patterns.md        # GoF 23 + Modern patterns
+│       ├── engineering-principles.md # SOLID, KISS, DRY, GRASP
+│       ├── system-design.md          # Architecture & Big O
+│       ├── testing-strategies.md     # Unit, Mutation, Integration
+│       │
+│       │   # Code Review & Quality
+│       ├── code-review-guidelines.md # Review process & feedback
+│       ├── pr-templates.md           # Pull request templates
+│       ├── labels-conventions.md     # GitHub labels system
+│       └── cicd-quality-gates.md     # CI/CD pipeline checks
+│
+└── resources/                        # Learning Resources
+    └── ai-engineering-resources.md   # Curated AI/Claude Code resources
 ```
 
 ## Agents
@@ -292,6 +296,28 @@ Use this matrix to assess AI usage readiness:
 | **Process** | Basic workflow | Quality gates | Why they exist |
 
 **AI Leverage Score**: Count "High Context" areas. 4-5 = Full AI leverage, 2-3 = Supervised AI, 0-1 = AI for learning only.
+
+## Learning Resources
+
+Accelerate your AI-assisted development skills with our curated collection of resources.
+
+**[View All Resources →](resources/ai-engineering-resources.md)**
+
+### Quick Links by Category
+
+| Category | What You'll Find |
+|----------|------------------|
+| **[Newsletters](resources/ai-engineering-resources.md#newsletters)** | Stay updated with THE CODE, Every, and more |
+| **[Long Courses](resources/ai-engineering-resources.md#long-courses)** | Structured learning paths for Claude Code |
+| **[GitHub Repos](resources/ai-engineering-resources.md#github-repositories)** | Templates, cheat sheets, and awesome lists |
+| **[YouTube Tutorials](resources/ai-engineering-resources.md#youtube-tutorials)** | Setup guides and workflow demonstrations |
+| **[Creators to Follow](resources/ai-engineering-resources.md#creators-to-follow)** | Industry experts on LinkedIn and X |
+
+### Featured Resources
+
+- **[Claude Code Cheat Sheet](https://lnkd.in/dhW5b8eB)** - Quick reference for commands and shortcuts
+- **[Claude Code for Everyone](https://lnkd.in/dXQ5U9d8)** - Beginner-friendly course
+- **[Awesome MCP Servers](https://lnkd.in/dfqS3ZRp)** - Model Context Protocol integrations
 
 ## Contributing
 
