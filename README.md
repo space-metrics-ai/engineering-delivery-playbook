@@ -9,10 +9,10 @@
 </p>
 
 <p align="center">
-  <a href="#-quick-start">Quick Start</a> •
-  <a href="#-daily-workflow">Daily Workflow</a> •
-  <a href="#-agents">Agents</a> •
-  <a href="#-knowledge-base">Knowledge Base</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#daily-workflow">Daily Workflow</a> •
+  <a href="#agents">Agents</a> •
+  <a href="#knowledge-base">Knowledge Base</a> •
   <a href="resources/">Resources</a>
 </p>
 
@@ -52,15 +52,15 @@ This playbook provides:
 
 ## Table of Contents
 
-- [Quick Start](#-quick-start)
-- [Daily Workflow](#-daily-workflow)
-- [Agents](#-agents)
-- [Knowledge Base](#-knowledge-base)
-- [Project Structure](#-project-structure)
-- [The Philosophy](#-the-philosophy)
-- [Resources](#-resources)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Quick Start](#quick-start)
+- [Daily Workflow](#daily-workflow)
+- [Agents](#agents)
+- [Knowledge Base](#knowledge-base)
+- [Project Structure](#project-structure)
+- [The Philosophy](#the-philosophy)
+- [Resources](#resources)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -389,5 +389,5 @@ MIT License — Use and adapt freely.
 </p>
 
 <p align="center">
-  <a href="#-quick-start">Back to top</a>
+  <a href="#quick-start">Back to top</a>
 </p>
