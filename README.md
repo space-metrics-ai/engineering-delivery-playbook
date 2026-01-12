@@ -18,7 +18,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/agents-10-blue" alt="Agents">
-  <img src="https://img.shields.io/badge/knowledge_bases-12-green" alt="Knowledge Bases">
+  <img src="https://img.shields.io/badge/knowledge_bases-13-green" alt="Knowledge Bases">
   <img src="https://img.shields.io/badge/license-MIT-yellow" alt="License">
 </p>
 
@@ -31,7 +31,7 @@
 This playbook provides:
 
 - **10 Specialized AI Agents** — Backend, Frontend, Mobile, DevOps engineers and reviewers, plus consultants
-- **12 Knowledge Bases** — Design patterns, principles, testing strategies, and more
+- **13 Knowledge Bases** — Design patterns, principles, testing strategies, spec-driven development, and more
 - **Practical Workflows** — Real examples of AI-assisted development throughout your day
 - **Measurement Framework** — Track AI usage and ROI across multiple tools
 
@@ -40,6 +40,7 @@ This playbook provides:
 ## Highlights
 
 ```
+✓ Spec-Driven Development with GitHub's spec-kit integration
 ✓ Copy-paste agent prompts for Claude, Cursor, ChatGPT, and any LLM
 ✓ Conventional Comments system for consistent code reviews
 ✓ PR templates, labels, and CI/CD quality gates ready to use
@@ -64,6 +65,30 @@ This playbook provides:
 ---
 
 ## Quick Start
+
+### 0. Set Up Spec-Driven Development (Recommended)
+
+Before writing code, use [GitHub's spec-kit](https://github.com/github/spec-kit) to transform specifications into executable artifacts.
+
+```bash
+# Install spec-kit CLI
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+
+# Initialize in your project
+specify init . --here --ai claude
+```
+
+**Spec-kit Workflow:**
+```
+/speckit.constitution  →  Establish project governance
+/speckit.specify       →  Define requirements
+/speckit.clarify       →  Refine specifications
+/speckit.plan          →  Create technical architecture
+/speckit.tasks         →  Generate task breakdown
+/speckit.implement     →  Execute implementation
+```
+
+> See [Spec-Kit Knowledge Base](agents/knowledge/spec-kit.md) for detailed usage.
 
 ### 1. Choose Your Agent
 
@@ -227,6 +252,7 @@ Reference materials for patterns, principles, and best practices.
 
 | Topic | What's Inside | Link |
 |-------|---------------|------|
+| **Spec-Kit** | Spec-driven development, slash commands | [View](agents/knowledge/spec-kit.md) |
 | **Code Review** | Conventional Comments, review checklists | [View](agents/knowledge/code-review-guidelines.md) |
 | **PR Templates** | Standard + specialized templates | [View](agents/knowledge/pr-templates.md) |
 | **Labels** | GitHub label taxonomy and automation | [View](agents/knowledge/labels-conventions.md) |
@@ -267,7 +293,8 @@ eng-delivery-playbook/
 │       ├── pr-templates.md
 │       ├── labels-conventions.md
 │       ├── cicd-quality-gates.md
-│       └── ai-metrics.md
+│       ├── ai-metrics.md
+│       └── spec-kit.md
 │
 └── resources/                     # Learning Resources
     └── README.md                  # Curated AI/Claude Code resources

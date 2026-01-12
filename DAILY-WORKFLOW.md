@@ -17,7 +17,7 @@ A practical guide illustrating how to leverage AI agents and the playbook throug
 │              │                                                              │
 │  09:00      ▼                                                              │
 │    ●────┌──────────────┐                                                   │
-│         │   Planning   │ Break down tasks, consult on architecture         │
+│         │   Planning   │ Spec-kit specs, consult on architecture           │
 │         └──────────────┘                                                   │
 │              │                                                              │
 │  10:00      ▼                                                              │
@@ -87,9 +87,74 @@ If builds are failing, reference the quality gates:
 
 ## 09:00 - Planning & Architecture
 
-### For New Features: Consult First
+### For New Features: Spec-Driven Development
 
-Before writing code, consult with the **Tech Consultant Agent** to validate your approach.
+Before writing code, use **spec-kit** to create executable specifications that guide AI-assisted implementation.
+
+**Initialize spec-kit (first time only):**
+```bash
+specify init . --here --ai claude
+```
+
+**Spec-kit Workflow:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SPEC-DRIVEN DEVELOPMENT FLOW                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. /speckit.constitution                                       │
+│     Define project governance and decision principles           │
+│                           │                                     │
+│                           ▼                                     │
+│  2. /speckit.specify                                            │
+│     Write detailed requirements and acceptance criteria         │
+│                           │                                     │
+│                           ▼                                     │
+│  3. /speckit.clarify                                            │
+│     Refine ambiguous requirements through Q&A                   │
+│                           │                                     │
+│                           ▼                                     │
+│  4. /speckit.plan                                               │
+│     Create technical architecture and design decisions          │
+│                           │                                     │
+│                           ▼                                     │
+│  5. /speckit.tasks                                              │
+│     Break down into actionable tasks with dependencies          │
+│                           │                                     │
+│                           ▼                                     │
+│  6. /speckit.implement                                          │
+│     Execute implementation with spec context                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Example spec-kit session:**
+```
+Agent: Claude / Cursor / Copilot
+
+/speckit.specify
+
+"I need to implement a real-time notification system for our mobile app.
+
+Requirements:
+- Push notifications for new messages
+- In-app notification center
+- Read/unread status tracking
+- Support for 50k DAU
+
+Acceptance criteria:
+- Notifications delivered within 2 seconds
+- 99.9% delivery reliability
+- Battery-efficient implementation on mobile"
+```
+
+The AI will guide you through creating a detailed spec, asking clarifying questions, and generating a structured implementation plan.
+
+> See [Spec-Kit Knowledge Base](agents/knowledge/spec-kit.md) for detailed usage and all commands.
+
+### Consult Tech Consultant for Architecture Decisions
+
+After creating your spec, consult with the **Tech Consultant Agent** to validate your approach.
 
 **Setup:**
 ```
@@ -459,7 +524,8 @@ AI-Contribution: high"
 
 | Situation | Agent | Quick Setup |
 |-----------|-------|-------------|
-| Starting a new feature | Tech Consultant | "Advise on architecture for..." |
+| Starting a new feature | Spec-kit | `/speckit.specify` then `/speckit.plan` |
+| Architecture decisions | Tech Consultant | "Advise on architecture for..." |
 | Writing backend code | Backend Engineer | "Implement a service that..." |
 | Writing frontend code | Frontend Engineer | "Create a component that..." |
 | Writing mobile code | Mobile Engineer | "Build a screen that..." |
@@ -519,9 +585,10 @@ From [The Philosophy](README.md#the-philosophy-context-driven-ai-usage):
 - [ ] Plan day's tasks
 
 ## Planning
-- [ ] Consult Tech Consultant for new features
-- [ ] Break down tasks into clear steps
-- [ ] Identify which agents will help
+- [ ] Use spec-kit to define requirements (`/speckit.specify`)
+- [ ] Create technical plan (`/speckit.plan`)
+- [ ] Consult Tech Consultant for architecture validation
+- [ ] Break down tasks into clear steps (`/speckit.tasks`)
 
 ## Development
 - [ ] Use Engineer Agent for implementation
@@ -552,16 +619,38 @@ From [The Philosophy](README.md#the-philosophy-context-driven-ai-usage):
 
 ### Scenario: Add User Profile Picture Upload
 
-**09:00 - Consult on Architecture**
+**09:00 - Define Specs with spec-kit**
+```
+Agent: Claude / Cursor
+
+/speckit.specify
+
+"Feature: User Profile Picture Upload
+
+Requirements:
+- Users can upload profile pictures from their device
+- Support JPEG, PNG, WebP formats
+- Maximum file size: 5MB
+- Generate thumbnails (200x200 and 50x50)
+- Store securely with CDN delivery
+
+Acceptance Criteria:
+- Upload completes within 3 seconds
+- Images served from CDN with <100ms latency
+- Graceful fallback for upload failures
+- Works on web and mobile clients"
+```
+
+**09:15 - Consult on Architecture**
 ```
 Agent: Tech Consultant
 
-"We need to add profile picture uploads. Options I'm considering:
+"Based on my spec, what storage approach do you recommend?
 1. Store in S3 with CloudFront CDN
 2. Use a service like Cloudinary
 3. Store in our existing PostgreSQL as base64
 
-What are the trade-offs? We have 100k users, budget is limited."
+We have 100k users, budget is limited."
 ```
 
 **10:00 - Backend Implementation**
