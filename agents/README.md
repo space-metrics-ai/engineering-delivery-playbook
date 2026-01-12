@@ -107,6 +107,23 @@ This folder contains AI agent definitions that establish personas, expertise, an
 
 ---
 
+### Analytics
+
+| Agent | Role | Focus | Link |
+|-------|------|-------|------|
+| **AI Metrics** | Analytics Specialist | AI usage measurement, productivity tracking | [View](ai-metrics.md) |
+
+**AI Metrics Agent** - Provides:
+- Multi-tool AI usage tracking (Copilot, Cursor, Claude, ChatGPT, etc.)
+- Utilization, impact, and ROI measurement frameworks
+- Developer productivity analytics
+- Adoption trend analysis and benchmarking
+- Data-driven recommendations for AI tool investment
+
+> **Note**: This agent helps organizations measure and optimize their AI tool investments across engineering teams.
+
+---
+
 ## Knowledge Base
 
 The `knowledge/` subfolder contains detailed reference materials:
@@ -141,6 +158,11 @@ The `knowledge/` subfolder contains detailed reference materials:
 | [pr-templates.md](knowledge/pr-templates.md) | PR templates for various change types |
 | [labels-conventions.md](knowledge/labels-conventions.md) | GitHub labels taxonomy |
 | [cicd-quality-gates.md](knowledge/cicd-quality-gates.md) | Pipeline checks, branch protection |
+
+### AI & Productivity
+| File | Description |
+|------|-------------|
+| [ai-metrics.md](knowledge/ai-metrics.md) | AI usage measurement, multi-tool tracking, ROI frameworks |
 
 **[View Full Knowledge Base Index →](knowledge/index.md)**
 
@@ -180,6 +202,10 @@ Reference the knowledge base for specific patterns.
 | Consultant | Focus | Link |
 |------------|-------|------|
 | **Tech Consultant** | All technologies | [consultant.md](consultant.md) |
+
+| Analytics | Focus | Link |
+|-----------|-------|------|
+| **AI Metrics** | AI usage & productivity | [ai-metrics.md](ai-metrics.md) |
 
 ---
 

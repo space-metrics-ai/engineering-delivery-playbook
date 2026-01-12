@@ -18,6 +18,7 @@ agents/
 ├── devops.md                       # DevOps Engineer
 ├── devops-reviewer.md              # DevOps Reviewer
 ├── consultant.md                   # Tech Consultant (advisory)
+├── ai-metrics.md                   # AI Metrics Agent (analytics)
 │
 └── knowledge/
     ├── index.md                    # This file
@@ -41,7 +42,10 @@ agents/
     ├── code-review-guidelines.md   # Review process & feedback
     ├── pr-templates.md             # PR template standards
     ├── labels-conventions.md       # GitHub labels & naming
-    └── cicd-quality-gates.md       # CI/CD pipeline checks
+    ├── cicd-quality-gates.md       # CI/CD pipeline checks
+    │
+    │   # AI & Productivity
+    └── ai-metrics.md               # AI usage measurement & ROI
 ```
 
 ---
@@ -116,6 +120,22 @@ agents/
 
 ---
 
+## AI & Productivity
+
+| File | Description |
+|------|-------------|
+| [ai-metrics.md](ai-metrics.md) | Multi-tool AI usage measurement, productivity tracking, ROI frameworks |
+
+**Covers:**
+- AI tools landscape (Copilot, Cursor, Claude, ChatGPT, etc.)
+- Three pillars framework: Utilization, Impact, Cost
+- Data collection methods (telemetry, git tags, surveys)
+- KPIs and benchmarks for AI adoption
+- Reporting templates and dashboards
+- Maturity model for AI-native development
+
+---
+
 ## Usage Guide
 
 ### For Backend Development
@@ -143,6 +163,13 @@ agents/
 1. Reference `consultant.md` for advisory approach
 2. Use all knowledge bases for cross-domain expertise
 3. Apply Socratic method and decision frameworks
+
+### For AI Metrics & Analytics
+1. Reference `ai-metrics.md` for agent identity and behavior
+2. Use `ai-metrics.md` knowledge for measurement frameworks
+3. Apply three pillars model (Utilization, Impact, Cost)
+4. Design data collection pipelines
+5. Create dashboards and reporting
 
 ### For Code Reviews
 1. Reference `*-reviewer.md` files for review standards
