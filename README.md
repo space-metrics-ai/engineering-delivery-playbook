@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="#quick-start">Quick Start</a> •
-  <a href="#daily-workflow">Daily Workflow</a> •
+  <a href="#development-flow">Development Flow</a> •
   <a href="#agents">Agents</a> •
   <a href="#knowledge-base">Knowledge Base</a> •
   <a href="resources/">Resources</a>
@@ -53,7 +53,7 @@ This playbook provides:
 ## Table of Contents
 
 - [Quick Start](#quick-start)
-- [Daily Workflow](#daily-workflow)
+- [Development Flow](#development-flow)
 - [Agents](#agents)
 - [Knowledge Base](#knowledge-base)
 - [Project Structure](#project-structure)
@@ -140,57 +140,28 @@ cat agents/backend.md | your-llm-cli --system-prompt -
 
 </details>
 
-### 3. Follow the Daily Workflow
+### 3. Follow the Development Flow
 
-See the complete [Daily Workflow Guide](DAILY-WORKFLOW.md) for how to use agents throughout your day.
+See the complete [Development Flow Guide](DAILY-WORKFLOW.md) for the full workflow.
 
 ---
 
-## Daily Workflow
+## Development Flow
 
 > **[Read the Full Guide →](DAILY-WORKFLOW.md)**
 
-A typical day using the playbook:
-
-| Time | Phase | Agent | What You Do |
-|------|-------|-------|-------------|
-| 08:30 | Morning Sync | Reviewer Agents | Review assigned PRs |
-| 09:00 | Planning | Tech Consultant | Discuss architecture for new features |
-| 10:00 | Development | Engineer Agents | Code with AI assistance |
-| 13:00 | Testing | Engineer Agents | Write tests with AI help |
-| 15:00 | Code Review | Reviewer Agents | Review teammates' PRs |
-| 16:30 | Wrap Up | Engineer Agents | Create PR, commit, track metrics |
-
-### Example: Planning a Feature
-
 ```
-Agent: Tech Consultant
-
-"I need to implement real-time notifications. Our stack is Node.js + Flutter.
-What architecture would you recommend? What are the trade-offs between
-WebSockets, SSE, and polling for 50k DAU?"
+SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ──▶ SHIP
 ```
 
-### Example: Writing Code
-
-```
-Agent: Backend Engineer
-
-"Create a WebSocket notification handler that:
-1. Authenticates with JWT
-2. Subscribes users to their channel
-3. Handles reconnection gracefully
-Use our existing patterns."
-```
-
-### Example: Reviewing Code
-
-```
-Agent: Backend Reviewer
-
-"Review this PR for security, error handling, and test coverage.
-Use Conventional Comments format (blocker, issue, suggestion, nit)."
-```
+| Phase | Tool/Agent | Example |
+|-------|------------|---------|
+| Specify | spec-kit | `/speckit.specify "Add avatar upload, max 5MB, S3 storage"` |
+| Plan | Tech Consultant | "WebSockets vs SSE for 50k DAU?" |
+| Implement | Engineer Agent | "Create POST /api/users/:id/avatar endpoint" |
+| Test | Engineer Agent | "Write tests for avatar upload" |
+| Review | Reviewer Agent | "Review this diff for security issues" |
+| Ship | Git + PR | `git commit && gh pr create` |
 
 ---
 
@@ -267,7 +238,7 @@ Reference materials for patterns, principles, and best practices.
 eng-delivery-playbook/
 │
 ├── README.md                      # You are here
-├── DAILY-WORKFLOW.md              # Engineer's daily workflow guide
+├── DAILY-WORKFLOW.md              # Development flow guide
 │
 ├── agents/                        # AI Agent Definitions
 │   ├── backend.md                 # Backend Engineer
