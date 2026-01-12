@@ -9,10 +9,9 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#development-flow">Development Flow</a> •
+  <a href="#development-flow">Flow</a> •
   <a href="#agents">Agents</a> •
-  <a href="#knowledge-base">Knowledge Base</a> •
+  <a href="#knowledge-base">Knowledge</a> •
   <a href="resources/">Resources</a>
 </p>
 
@@ -24,152 +23,116 @@
 
 ---
 
-## Why This Playbook?
-
-**AI effectiveness scales with context.** Without guidance, AI generates code that "works" but creates tech debt. With the right context, AI becomes a force multiplier.
-
-This playbook provides:
-
-- **10 Specialized AI Agents** — Backend, Frontend, Mobile, DevOps engineers and reviewers, plus consultants
-- **13 Knowledge Bases** — Design patterns, principles, testing strategies, spec-driven development, and more
-- **Practical Workflows** — Real examples of AI-assisted development throughout your day
-- **Measurement Framework** — Track AI usage and ROI across multiple tools
-
----
-
-## Highlights
-
-```
-✓ Spec-Driven Development with GitHub's spec-kit integration
-✓ Copy-paste agent prompts for Claude, Cursor, ChatGPT, and any LLM
-✓ Conventional Comments system for consistent code reviews
-✓ PR templates, labels, and CI/CD quality gates ready to use
-✓ Multi-tool AI metrics tracking (Copilot, Cursor, Claude, ChatGPT)
-✓ Complete daily workflow guide with real examples
-```
-
----
-
-## Table of Contents
-
-- [Quick Start](#quick-start)
-- [Development Flow](#development-flow)
-- [Agents](#agents)
-- [Knowledge Base](#knowledge-base)
-- [Project Structure](#project-structure)
-- [The Philosophy](#the-philosophy)
-- [Resources](#resources)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
-## Quick Start
-
-### 0. Set Up Spec-Driven Development (Recommended)
-
-Before writing code, use [GitHub's spec-kit](https://github.com/github/spec-kit) to transform specifications into executable artifacts.
-
-```bash
-# Install spec-kit CLI
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-
-# Initialize in your project
-specify init . --here --ai claude
-```
-
-**Spec-kit Workflow:**
-```
-/speckit.constitution  →  Establish project governance
-/speckit.specify       →  Define requirements
-/speckit.clarify       →  Refine specifications
-/speckit.plan          →  Create technical architecture
-/speckit.tasks         →  Generate task breakdown
-/speckit.implement     →  Execute implementation
-```
-
-> See [Spec-Kit Knowledge Base](agents/knowledge/spec-kit.md) for detailed usage.
-
-### 1. Choose Your Agent
-
-| I want to... | Use this agent | Quick prompt |
-|--------------|----------------|--------------|
-| Write backend code | [Backend Engineer](agents/backend.md) | `You are a Senior Backend Engineer. Follow agents/backend.md.` |
-| Write frontend code | [Frontend Engineer](agents/frontend.md) | `You are a Senior Frontend Engineer. Follow agents/frontend.md.` |
-| Write mobile code | [Mobile Engineer](agents/mobile.md) | `You are a Senior Mobile Engineer. Follow agents/mobile.md.` |
-| Set up infrastructure | [DevOps Engineer](agents/devops.md) | `You are a Senior DevOps Engineer. Follow agents/devops.md.` |
-| Review backend PRs | [Backend Reviewer](agents/backend-reviewer.md) | `You are a Backend Reviewer. Use Conventional Comments.` |
-| Review frontend PRs | [Frontend Reviewer](agents/frontend-reviewer.md) | `You are a Frontend Reviewer. Focus on a11y and performance.` |
-| Get architecture advice | [Tech Consultant](agents/consultant.md) | `You are a Tech Consultant. DO NOT write code. Advise only.` |
-| Measure AI usage | [AI Metrics](agents/ai-metrics.md) | `You are an AI Metrics Specialist. Track multi-tool usage.` |
-
-### 2. Set Up Your Tool
-
-<details>
-<summary><strong>Claude Code / Cursor</strong></summary>
-
-Add to `.claude/settings.json` or Cursor rules:
-
-```json
-{
-  "systemPrompt": "You are a Senior Backend Engineer following agents/backend.md from the engineering-delivery-playbook."
-}
-```
-
-</details>
-
-<details>
-<summary><strong>ChatGPT / Custom GPT</strong></summary>
-
-1. Copy the full content of the agent file (e.g., `agents/backend.md`)
-2. Paste as "Instructions" in your Custom GPT
-3. Add knowledge files from `agents/knowledge/` as needed
-
-</details>
-
-<details>
-<summary><strong>CLI Usage</strong></summary>
-
-```bash
-# Claude Code
-claude --system-prompt "$(cat agents/backend.md)"
-
-# Any LLM CLI
-cat agents/backend.md | your-llm-cli --system-prompt -
-```
-
-</details>
-
-### 3. Follow the Development Flow
-
-See the complete [Development Flow Guide](DAILY-WORKFLOW.md) for the full workflow.
-
----
-
 ## Development Flow
-
-> **[Read the Full Guide →](DAILY-WORKFLOW.md)**
 
 ```
 SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ──▶ SHIP
 ```
 
-| Phase | Tool/Agent | Example |
-|-------|------------|---------|
-| Specify | spec-kit | `/speckit.specify "Add avatar upload, max 5MB, S3 storage"` |
-| Plan | Tech Consultant | "WebSockets vs SSE for 50k DAU?" |
-| Implement | Engineer Agent | "Create POST /api/users/:id/avatar endpoint" |
-| Test | Engineer Agent | "Write tests for avatar upload" |
-| Review | Reviewer Agent | "Review this diff for security issues" |
-| Ship | Git + PR | `git commit && gh pr create` |
+### 1. Specify
+
+Use [spec-kit](https://github.com/github/spec-kit) to define what you're building.
+
+```bash
+# First time setup
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+specify init . --here --ai claude
+```
+
+**Fast path:**
+```
+/speckit.specify "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
+/speckit.implement
+```
+
+**Full path (complex features):**
+```
+/speckit.specify    → Define requirements
+/speckit.plan       → Technical design
+/speckit.tasks      → Break into tasks
+/speckit.implement  → Build it
+```
+
+### 2. Plan
+
+For architecture decisions, consult before coding.
+
+```
+Agent: Tech Consultant
+
+"Real-time notifications for 50k DAU. Node.js + Flutter.
+WebSockets vs SSE vs Polling - which and why?"
+```
+
+### 3. Implement
+
+```
+Agent: Backend Engineer
+
+"Create POST /api/users/:id/avatar:
+- multipart/form-data, max 5MB
+- Validate JPEG/PNG/WebP
+- Resize 200x200 with Sharp
+- Upload to S3, return CDN URL"
+```
+
+### 4. Test
+
+```
+Agent: Backend Engineer
+
+"Write tests for avatar upload:
+- Valid JPEG succeeds
+- >5MB rejected
+- Non-image rejected
+- S3 failure handled
+Use Jest, mock S3"
+```
+
+### 5. Review
+
+```
+Agent: Backend Reviewer
+
+"Review my avatar implementation for:
+- Security vulnerabilities
+- Error handling
+- Test coverage
+Use Conventional Comments"
+```
+
+**Format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
+
+### 6. Ship
+
+```bash
+git add . && git commit -m "feat(users): add avatar upload"
+gh pr create
+```
+
+---
+
+## Quick Prompts
+
+```bash
+# Specify
+/speckit.specify "Add logout: clear session, redirect to login"
+
+# Implement
+"Add DELETE /api/auth/session: invalidate JWT, return 204"
+
+# Test
+"Write tests: success, already logged out, invalid token"
+
+# Review
+"Review this diff for security: <paste>"
+```
 
 ---
 
 ## Agents
 
-### Engineer Agents
-
-Build features with senior-level expertise.
+### Engineers
 
 | Agent | Technologies | Link |
 |-------|--------------|------|
@@ -178,187 +141,132 @@ Build features with senior-level expertise.
 | **Mobile** | Flutter, Android (Kotlin), iOS (Swift) | [View](agents/mobile.md) |
 | **DevOps** | Kubernetes, Terraform, Docker, AWS/GCP/Azure | [View](agents/devops.md) |
 
-### Reviewer Agents
+### Reviewers
 
-Enforce quality standards with Conventional Comments.
+| Agent | Focus | Link |
+|-------|-------|------|
+| **Backend** | Security, performance, patterns | [View](agents/backend-reviewer.md) |
+| **Frontend** | Accessibility, Core Web Vitals | [View](agents/frontend-reviewer.md) |
+| **Mobile** | Platform guidelines, performance | [View](agents/mobile-reviewer.md) |
+| **DevOps** | Security, reliability, IaC | [View](agents/devops-reviewer.md) |
 
-| Agent | Focus Areas | Link |
-|-------|-------------|------|
-| **Backend** | Security, performance, patterns, testing | [View](agents/backend-reviewer.md) |
-| **Frontend** | Accessibility, Core Web Vitals, UX | [View](agents/frontend-reviewer.md) |
-| **Mobile** | Platform guidelines, performance, UX | [View](agents/mobile-reviewer.md) |
-| **DevOps** | Security, reliability, IaC standards | [View](agents/devops-reviewer.md) |
-
-### Specialist Agents
+### Specialists
 
 | Agent | Purpose | Link |
 |-------|---------|------|
-| **Tech Consultant** | Architecture advice (no coding) | [View](agents/consultant.md) |
-| **AI Metrics** | Track AI tool usage and ROI | [View](agents/ai-metrics.md) |
+| **Tech Consultant** | Architecture advice (no code) | [View](agents/consultant.md) |
+| **AI Metrics** | Track AI usage and ROI | [View](agents/ai-metrics.md) |
+
+---
+
+## Setup
+
+<details>
+<summary><strong>Claude Code / Cursor</strong></summary>
+
+```json
+{
+  "systemPrompt": "You are a Senior Backend Engineer following agents/backend.md"
+}
+```
+</details>
+
+<details>
+<summary><strong>ChatGPT / Custom GPT</strong></summary>
+
+1. Copy agent file content (e.g., `agents/backend.md`)
+2. Paste as "Instructions"
+3. Add knowledge files as needed
+</details>
+
+<details>
+<summary><strong>CLI</strong></summary>
+
+```bash
+claude --system-prompt "$(cat agents/backend.md)"
+```
+</details>
 
 ---
 
 ## Knowledge Base
 
-Reference materials for patterns, principles, and best practices.
+### Fundamentals
 
-### Engineering Fundamentals
+| Topic | Link |
+|-------|------|
+| Design Patterns | [View](agents/knowledge/design-patterns.md) |
+| Engineering Principles | [View](agents/knowledge/engineering-principles.md) |
+| System Design | [View](agents/knowledge/system-design.md) |
+| Testing Strategies | [View](agents/knowledge/testing-strategies.md) |
 
-| Topic | What's Inside | Link |
-|-------|---------------|------|
-| **Design Patterns** | GoF 23 + CQRS, Event Sourcing, Saga | [View](agents/knowledge/design-patterns.md) |
-| **Engineering Principles** | SOLID, KISS, DRY, Clean Architecture | [View](agents/knowledge/engineering-principles.md) |
-| **System Design** | Big O, distributed systems, CAP theorem | [View](agents/knowledge/system-design.md) |
-| **Testing Strategies** | Unit, integration, mutation testing | [View](agents/knowledge/testing-strategies.md) |
+### Platform
 
-### Platform-Specific
+| Topic | Link |
+|-------|------|
+| Frontend Development | [View](agents/knowledge/frontend-development.md) |
+| Mobile Development | [View](agents/knowledge/mobile-development.md) |
+| DevOps Practices | [View](agents/knowledge/devops-practices.md) |
 
-| Topic | What's Inside | Link |
-|-------|---------------|------|
-| **Frontend** | React/Vue patterns, state management, a11y | [View](agents/knowledge/frontend-development.md) |
-| **Mobile** | Flutter/Android/iOS patterns, MVVM, MVI | [View](agents/knowledge/mobile-development.md) |
-| **DevOps** | CI/CD, Kubernetes, Terraform, SRE | [View](agents/knowledge/devops-practices.md) |
+### Process
 
-### Process & Quality
-
-| Topic | What's Inside | Link |
-|-------|---------------|------|
-| **Spec-Kit** | Spec-driven development, slash commands | [View](agents/knowledge/spec-kit.md) |
-| **Code Review** | Conventional Comments, review checklists | [View](agents/knowledge/code-review-guidelines.md) |
-| **PR Templates** | Standard + specialized templates | [View](agents/knowledge/pr-templates.md) |
-| **Labels** | GitHub label taxonomy and automation | [View](agents/knowledge/labels-conventions.md) |
-| **CI/CD Gates** | Quality gates, branch protection | [View](agents/knowledge/cicd-quality-gates.md) |
-| **AI Metrics** | Multi-tool usage tracking, ROI frameworks | [View](agents/knowledge/ai-metrics.md) |
+| Topic | Link |
+|-------|------|
+| Spec-Kit | [View](agents/knowledge/spec-kit.md) |
+| Code Review | [View](agents/knowledge/code-review-guidelines.md) |
+| PR Templates | [View](agents/knowledge/pr-templates.md) |
+| Labels | [View](agents/knowledge/labels-conventions.md) |
+| CI/CD Gates | [View](agents/knowledge/cicd-quality-gates.md) |
+| AI Metrics | [View](agents/knowledge/ai-metrics.md) |
 
 ---
 
-## Project Structure
+## Quality Standards
 
-```
-eng-delivery-playbook/
-│
-├── README.md                      # You are here
-├── DAILY-WORKFLOW.md              # Development flow guide
-│
-├── agents/                        # AI Agent Definitions
-│   ├── backend.md                 # Backend Engineer
-│   ├── backend-reviewer.md        # Backend Reviewer
-│   ├── frontend.md                # Frontend Engineer
-│   ├── frontend-reviewer.md       # Frontend Reviewer
-│   ├── mobile.md                  # Mobile Engineer
-│   ├── mobile-reviewer.md         # Mobile Reviewer
-│   ├── devops.md                  # DevOps Engineer
-│   ├── devops-reviewer.md         # DevOps Reviewer
-│   ├── consultant.md              # Tech Consultant
-│   ├── ai-metrics.md              # AI Metrics Agent
-│   │
-│   └── knowledge/                 # Knowledge Bases
-│       ├── design-patterns.md
-│       ├── engineering-principles.md
-│       ├── system-design.md
-│       ├── testing-strategies.md
-│       ├── frontend-development.md
-│       ├── mobile-development.md
-│       ├── devops-practices.md
-│       ├── code-review-guidelines.md
-│       ├── pr-templates.md
-│       ├── labels-conventions.md
-│       ├── cicd-quality-gates.md
-│       ├── ai-metrics.md
-│       └── spec-kit.md
-│
-└── resources/                     # Learning Resources
-    └── README.md                  # Curated AI/Claude Code resources
-```
-
----
-
-## The Philosophy
-
-### Context-Driven AI Usage
-
-**Your AI effectiveness depends on your business context.**
-
-| Your Context Level | Days | How to Use AI |
-|-------------------|------|---------------|
-| **Onboarding** | 0-30 | Learning assistant — explore, ask questions |
-| **Ramping** | 30-60 | Pair programmer — implement with supervision |
-| **Contributing** | 60-90 | Accelerator — complex tasks, light review |
-| **Established** | 90+ | Force multiplier — full leverage |
-
-### The Context Maturity Matrix
-
-Rate yourself on each dimension:
-
-| Dimension | Low | Medium | High |
-|-----------|-----|--------|------|
-| **Codebase** | Can navigate | Understands patterns | Knows history |
-| **Domain** | Basic terms | Business rules | Edge cases |
-| **Architecture** | Component names | Data flow | Trade-offs |
-| **Team** | Names/roles | Responsibilities | Communication |
-| **Process** | Basic workflow | Quality gates | Why they exist |
-
-**Score**: 4-5 High = Full AI leverage | 2-3 High = Supervised | 0-1 High = Learning mode
-
-### Key Standards
-
-| Standard | Threshold |
-|----------|-----------|
+| Standard | Target |
+|----------|--------|
 | PR Size | < 400 lines |
 | Code Coverage | >= 80% (new code) |
 | Review Response | < 4 hours |
-| Security Scan | No critical/high vulnerabilities |
-| Accessibility | WCAG AA compliance |
+| Security Scan | No critical/high |
+
+---
+
+## Context Levels
+
+| Level | Days | AI Usage |
+|-------|------|----------|
+| **Onboarding** | 0-30 | Learning assistant |
+| **Ramping** | 30-60 | Pair programmer |
+| **Contributing** | 60-90 | Accelerator |
+| **Established** | 90+ | Force multiplier |
 
 ---
 
 ## Resources
 
-> **[View All Resources →](resources/)**
-
-### Quick Links
+> **[View All →](resources/)**
 
 | Category | Highlights |
 |----------|------------|
-| **Newsletters** | THE CODE, Every, JP, Joe Njenga |
-| **Courses** | Claude Code beginner to advanced |
-| **GitHub Repos** | claude-code-cheat-sheet, awesome-mcp-servers |
-| **YouTube** | Setup guides, workflows, multi-agent dev |
-| **Creators** | Ray Amjad, Joe Njenga, Daniel Avila |
+| Newsletters | THE CODE, Every, JP |
+| Courses | Claude Code beginner to advanced |
+| GitHub | claude-code-cheat-sheet, awesome-mcp-servers |
 
 ---
 
 ## Contributing
 
-We welcome contributions! Here's how:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-addition`)
-3. **Follow** the existing structure and formatting
-4. **Include** code examples in multiple languages where applicable
-5. **Update** relevant README files
-6. **Submit** a Pull Request
-
-### Guidelines
-
-- Keep content practical and actionable
-- Use tables for comparisons
-- Include real-world examples
-- Reference related knowledge bases
+1. Fork → 2. Branch → 3. Follow structure → 4. PR
 
 ---
 
 ## License
 
-MIT License — Use and adapt freely.
+MIT — Use and adapt freely.
 
 ---
 
 <p align="center">
-  <strong>AI is a tool, not a replacement for understanding.</strong><br>
-  The best results come from humans with context guiding AI with capabilities.
-</p>
-
-<p align="center">
-  <a href="#quick-start">Back to top</a>
+  <strong>AI is a tool, not a replacement for understanding.</strong>
 </p>
