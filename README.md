@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="#getting-started">Getting Started</a> •
   <a href="#development-flow">Flow</a> •
   <a href="#agents">Agents</a> •
   <a href="#knowledge-base">Knowledge</a> •
@@ -20,6 +21,47 @@
   <img src="https://img.shields.io/badge/knowledge_bases-13-green" alt="Knowledge Bases">
   <img src="https://img.shields.io/badge/license-MIT-yellow" alt="License">
 </p>
+
+---
+
+## Getting Started
+
+### 1. Install spec-kit
+
+```bash
+uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+```
+
+### 2. Initialize in your project
+
+```bash
+specify init . --here --ai claude
+```
+
+### 3. Configure your AI tool
+
+**Claude Code / Cursor:**
+```json
+{
+  "systemPrompt": "You are a Senior Backend Engineer following agents/backend.md"
+}
+```
+
+**ChatGPT:** Copy agent file → Paste as Instructions
+
+**CLI:**
+```bash
+claude --system-prompt "$(cat agents/backend.md)"
+```
+
+### 4. Start building
+
+```bash
+/speckit.specify "Your feature description here"
+/speckit.implement
+```
+
+That's it. Now follow the [Development Flow](#development-flow) below.
 
 ---
 
@@ -156,36 +198,6 @@ gh pr create
 |-------|---------|------|
 | **Tech Consultant** | Architecture advice (no code) | [View](agents/consultant.md) |
 | **AI Metrics** | Track AI usage and ROI | [View](agents/ai-metrics.md) |
-
----
-
-## Setup
-
-<details>
-<summary><strong>Claude Code / Cursor</strong></summary>
-
-```json
-{
-  "systemPrompt": "You are a Senior Backend Engineer following agents/backend.md"
-}
-```
-</details>
-
-<details>
-<summary><strong>ChatGPT / Custom GPT</strong></summary>
-
-1. Copy agent file content (e.g., `agents/backend.md`)
-2. Paste as "Instructions"
-3. Add knowledge files as needed
-</details>
-
-<details>
-<summary><strong>CLI</strong></summary>
-
-```bash
-claude --system-prompt "$(cat agents/backend.md)"
-```
-</details>
 
 ---
 
