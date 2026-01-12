@@ -79,6 +79,7 @@ With Context:    Human guides → AI generates → Value delivered
 ```
 eng-delivery-playbook/
 ├── README.md                    # You are here
+├── DAILY-WORKFLOW.md            # Engineer's daily workflow guide
 ├── context-vs-onboarding.png    # AI usage philosophy
 │
 ├── agents/                      # AI Agent Definitions
@@ -190,9 +191,10 @@ Add to `.claude/settings.json` or Cursor rules:
 4. Set up [CI/CD gates](agents/knowledge/cicd-quality-gates.md)
 
 ### For Engineers
-1. Review the [context model](#the-philosophy-context-driven-ai-usage)
-2. Study the [knowledge base](agents/knowledge/)
-3. Check the [resources](resources/) to level up
+1. **Follow the [Daily Workflow Guide](DAILY-WORKFLOW.md)** - See how to use all tools throughout your day
+2. Review the [context model](#the-philosophy-context-driven-ai-usage)
+3. Study the [knowledge base](agents/knowledge/)
+4. Check the [resources](resources/) to level up
 
 ---
 
