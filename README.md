@@ -21,6 +21,7 @@ A comprehensive collection of AI-powered engineering agents and knowledge bases 
 | **DevOps Engineer** | Senior engineer expert in Kubernetes, Docker, Terraform, AWS/GCP/Azure. Covers GitOps, CI/CD pipelines, observability, and infrastructure automation. | [View](agents/devops.md) |
 | **DevOps Reviewer** | Infrastructure review specialist enforcing security, reliability, IaC best practices, secrets management, and pipeline quality gates. | [View](agents/devops-reviewer.md) |
 | **Tech Consultant** | Advisory agent (no coding). Provides strategic guidance, asks probing questions, challenges assumptions, presents trade-offs, and helps teams make informed technical decisions. | [View](agents/consultant.md) |
+| **AI Metrics** | Analytics specialist for measuring AI tool usage across multiple assistants (Copilot, Cursor, Claude, ChatGPT). Tracks utilization, productivity impact, and ROI. | [View](agents/ai-metrics.md) |
 
 ### Knowledge Base
 
@@ -37,6 +38,7 @@ A comprehensive collection of AI-powered engineering agents and knowledge bases 
 | **PR Templates** | Standard PR template with all sections. Specialized templates: Bug Fix, Feature, Refactor, Database Migration, Hotfix, Dependency Update. | [View](agents/knowledge/pr-templates.md) |
 | **Labels Conventions** | Complete GitHub label taxonomy. Categories: Type, Priority, Size, Status, Review. Color codes and automation setup with GitHub Actions. | [View](agents/knowledge/labels-conventions.md) |
 | **CI/CD Quality Gates** | Pipeline quality gates: build, test, security, coverage. SonarQube integration. Branch protection rules. Complete GitHub Actions examples. | [View](agents/knowledge/cicd-quality-gates.md) |
+| **AI Metrics** | Multi-tool AI usage measurement framework. Tracks Copilot, Cursor, Claude, ChatGPT usage. Utilization, impact, and ROI metrics. Dashboards and surveys. | [View](agents/knowledge/ai-metrics.md) |
 
 ### Resources
 
@@ -101,6 +103,9 @@ eng-delivery-playbook/
 │   │   # Consultants
 │   ├── consultant.md            # Tech Consultant (advisory only)
 │   │
+│   │   # Analytics
+│   ├── ai-metrics.md            # AI Metrics Agent
+│
 │   └── knowledge/               # Reference Materials
 │       ├── index.md
 │       ├── design-patterns.md
@@ -113,7 +118,8 @@ eng-delivery-playbook/
 │       ├── code-review-guidelines.md
 │       ├── pr-templates.md
 │       ├── labels-conventions.md
-│       └── cicd-quality-gates.md
+│       ├── cicd-quality-gates.md
+│       └── ai-metrics.md            # AI usage measurement
 │
 └── resources/                   # Learning Resources
     └── README.md                # Curated AI/Claude Code resources
@@ -152,10 +158,29 @@ Assess your AI readiness:
 
 ## Getting Started
 
-### For AI Systems
-```
-You are a Senior [Backend/Frontend/Mobile/DevOps] Engineer.
-Follow the guidelines in agents/[specialty].md.
+### Quick Start by Agent
+
+| Agent | Quick Setup | Full Guide |
+|-------|-------------|------------|
+| **Backend Engineer** | `You are a Senior Backend Engineer. Follow agents/backend.md.` | [View](agents/backend.md#getting-started) |
+| **Backend Reviewer** | `You are a Senior Backend Reviewer. Follow agents/backend-reviewer.md.` | [View](agents/backend-reviewer.md#getting-started) |
+| **Frontend Engineer** | `You are a Senior Frontend Engineer. Follow agents/frontend.md.` | [View](agents/frontend.md#getting-started) |
+| **Frontend Reviewer** | `You are a Senior Frontend Reviewer. Follow agents/frontend-reviewer.md.` | [View](agents/frontend-reviewer.md#getting-started) |
+| **Mobile Engineer** | `You are a Senior Mobile Engineer. Follow agents/mobile.md.` | [View](agents/mobile.md#getting-started) |
+| **Mobile Reviewer** | `You are a Senior Mobile Reviewer. Follow agents/mobile-reviewer.md.` | [View](agents/mobile-reviewer.md#getting-started) |
+| **DevOps Engineer** | `You are a Senior DevOps Engineer. Follow agents/devops.md.` | [View](agents/devops.md#getting-started) |
+| **DevOps Reviewer** | `You are a Senior DevOps Reviewer. Follow agents/devops-reviewer.md.` | [View](agents/devops-reviewer.md#getting-started) |
+| **Tech Consultant** | `You are a Tech Consultant. Follow agents/consultant.md. DO NOT write code.` | [View](agents/consultant.md#getting-started) |
+| **AI Metrics** | `You are an AI Metrics Specialist. Follow agents/ai-metrics.md.` | [View](agents/ai-metrics.md#getting-started) |
+
+### Claude Code / Cursor Setup
+
+Add to `.claude/settings.json` or Cursor rules:
+
+```json
+{
+  "systemPrompt": "You are a Senior [Backend/Frontend/Mobile/DevOps] Engineer following the guidelines in agents/[specialty].md from the engineering-delivery-playbook."
+}
 ```
 
 ### For Teams

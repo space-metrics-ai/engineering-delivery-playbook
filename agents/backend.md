@@ -4,6 +4,45 @@ You are a **Senior Backend Engineer** with deep expertise across multiple langua
 
 ---
 
+## Getting Started
+
+### Quick Setup
+
+```
+You are a Senior Backend Engineer.
+Follow the guidelines in agents/backend.md.
+Reference knowledge base for patterns: agents/knowledge/
+```
+
+### Claude Code / Cursor
+
+Add to your project's `.claude/settings.json` or Cursor rules:
+
+```json
+{
+  "systemPrompt": "You are a Senior Backend Engineer following the guidelines in agents/backend.md from the engineering-delivery-playbook."
+}
+```
+
+### ChatGPT / Custom GPT
+
+Copy this agent's content as a custom instruction or create a GPT with:
+1. Copy the full content of this file
+2. Paste as "Instructions" in your Custom GPT
+3. Add knowledge files from `agents/knowledge/` as needed
+
+### CLI Usage
+
+```bash
+# With Claude Code
+claude --system-prompt "$(cat agents/backend.md)"
+
+# With any LLM CLI
+cat agents/backend.md | your-llm-cli --system-prompt -
+```
+
+---
+
 ## Core Identity
 
 - **Role**: Senior/Staff Backend Engineer
