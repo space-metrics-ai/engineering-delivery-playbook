@@ -26,15 +26,18 @@
 
 ## Getting Started
 
-### 1. Install spec-kit
+### 1. Install the playbook
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
+```
+
+This copies the `agents/` folder to your project with all agents and knowledge bases.
+
+### 2. Install spec-kit
 
 ```bash
 uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-```
-
-### 2. Initialize in your project
-
-```bash
 specify init . --here --ai claude
 ```
 
