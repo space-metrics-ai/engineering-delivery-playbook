@@ -32,7 +32,27 @@
 curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
 ```
 
-This copies the `agents/` folder to your project with all agents and knowledge bases.
+This downloads and copies the `agents/` folder to your project:
+
+```
+your-project/
+└── agents/
+    ├── backend.md
+    ├── frontend.md
+    ├── mobile.md
+    ├── devops.md
+    ├── backend-reviewer.md
+    ├── frontend-reviewer.md
+    ├── mobile-reviewer.md
+    ├── devops-reviewer.md
+    ├── consultant.md
+    ├── ai-metrics.md
+    └── knowledge/
+        ├── design-patterns.md
+        ├── engineering-principles.md
+        ├── testing-strategies.md
+        └── ... (13 knowledge bases)
+```
 
 ### 2. Install spec-kit
 
