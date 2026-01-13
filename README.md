@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="logo.png" alt="Engineering Delivery Playbook Logo" width="640">
+</p>
+
+<p align="center">
   <img src="context-vs-onboarding.png" alt="Engineering Delivery Playbook" width="600">
 </p>
 
