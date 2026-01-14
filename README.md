@@ -44,7 +44,17 @@ npx @space-metrics-ai/eng-delivery-playbook
 curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
 ```
 
-This downloads and copies the `agents/` folder to your project:
+The installer will:
+1. Copy all agents to `./agents/`
+2. Ask which agent you want to use
+3. Auto-configure `CLAUDE.md` and `.cursorrules`
+
+**Switch agents later:**
+```bash
+cp agents/frontend.md CLAUDE.md && cp agents/frontend.md .cursorrules
+```
+
+Structure after install:
 
 ```
 your-project/
@@ -73,36 +83,7 @@ uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
 specify init . --here --ai claude
 ```
 
-### 3. Configure your AI tool
-
-Choose the agent that matches your task:
-
-| Task | Agent File |
-|------|------------|
-| Backend development | `agents/backend.md` |
-| Frontend development | `agents/frontend.md` |
-| Mobile development | `agents/mobile.md` |
-| DevOps/Infrastructure | `agents/devops.md` |
-| Code review | `agents/*-reviewer.md` |
-| Architecture decisions | `agents/consultant.md` |
-
-**Claude Code / Cursor:**
-```json
-{
-  "systemPrompt": "You are a Senior Frontend Engineer following agents/frontend.md"
-}
-```
-
-**ChatGPT:** Copy agent file → Paste as Instructions
-
-**CLI:**
-```bash
-# Switch agents by changing the file
-claude --system-prompt "$(cat agents/frontend.md)"
-claude --system-prompt "$(cat agents/backend-reviewer.md)"
-```
-
-### 4. Start building
+### 3. Start building
 
 ```bash
 /speckit.specify "Your feature description here"
@@ -318,6 +299,23 @@ gh pr create
 | Newsletters | THE CODE, Every, JP |
 | Courses | Claude Code beginner to advanced |
 | GitHub | claude-code-cheat-sheet, awesome-mcp-servers |
+
+---
+
+## Changelog
+
+### 1.1.0
+- Interactive installer with agent selection
+- Auto-configure `CLAUDE.md` and `.cursorrules`
+- GitHub Packages support
+- Dynamic version badges
+
+### 1.0.0
+- Initial release
+- 10 agents (Backend, Frontend, Mobile, DevOps + Reviewers + Consultant)
+- 13 knowledge bases
+- npm package support
+- curl installer
 
 ---
 
