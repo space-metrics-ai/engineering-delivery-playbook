@@ -106,6 +106,8 @@ That's it. Now follow the [Development Flow](#development-flow) below.
   <img src="context-vs-onboarding.png" alt="Engineering Delivery Playbook" width="600">
 </p>
 
+> **AI usage should scale with your business context.** If you're new to the codebase or domain (Day 0-30), use AI sparingly—focus on learning and understanding first. As your context grows (Day 60-120), AI becomes a force multiplier. Remember: AI is an assistant, not a replacement for domain knowledge. You must understand what you're building to validate AI outputs effectively.
+
 ```
 SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ──▶ SHIP
 ```
