@@ -108,63 +108,51 @@ SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ─�
 
 ### 1. Specify
 
-Use [spec-kit](https://github.com/github/spec-kit) to define what you're building.
+Define what you're building with [spec-kit](https://github.com/github/spec-kit):
 
 ```bash
-# First time setup
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify init . --here --ai claude
-```
-
-**Fast path:**
-```
 /speckit.specify "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
-/speckit.implement
-```
-
-**Full path (complex features):**
-```
-/speckit.specify    → Define requirements
-/speckit.plan       → Technical design
-/speckit.tasks      → Break into tasks
-/speckit.implement  → Build it
 ```
 
 ### 2. Plan (optional)
 
-For architecture decisions, switch to Tech Consultant:
+For architecture decisions, switch to the consultant:
 
 ```bash
-cp agents/consultant.md CLAUDE.md
+edp switch consultant
 ```
 
-Then ask:
+Then ask your question:
 ```
 "Real-time notifications for 50k DAU. Node.js + Flutter.
 WebSockets vs SSE vs Polling - which and why?"
 ```
 
-### 3. Implement + Test
+### 3. Implement
 
-Your configured agent (e.g., Backend Engineer) handles both:
+Switch to your engineer agent and implement:
+
+```bash
+edp switch backend
+```
 
 ```
 /speckit.implement
 ```
 
-The agent will implement the feature and write tests following best practices.
+The agent implements the feature and writes tests following best practices.
 
 ### 4. Review
 
 Switch to the reviewer agent:
 
 ```bash
-cp agents/backend-reviewer.md CLAUDE.md
+edp switch backend-reviewer
 ```
 
 Then ask:
 ```
-"Review my avatar implementation for security, error handling, and test coverage"
+"Review my implementation for security, error handling, and test coverage"
 ```
 
 **Review format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
@@ -176,7 +164,31 @@ git add . && git commit -m "feat(users): add avatar upload"
 gh pr create
 ```
 
-> **Tip:** Keep your primary agent configured. Only switch for specific tasks like architecture consulting or code review.
+---
+
+## CLI Reference
+
+```bash
+edp                      # Install agents (interactive)
+edp switch <agent>       # Switch to a different agent
+edp list                 # List all available agents
+```
+
+**Available agents:**
+
+| Command | Agent |
+|---------|-------|
+| `edp switch backend` | Backend Engineer |
+| `edp switch frontend` | Frontend Engineer |
+| `edp switch mobile` | Mobile Engineer |
+| `edp switch devops` | DevOps Engineer |
+| `edp switch backend-reviewer` | Backend Reviewer |
+| `edp switch frontend-reviewer` | Frontend Reviewer |
+| `edp switch mobile-reviewer` | Mobile Reviewer |
+| `edp switch devops-reviewer` | DevOps Reviewer |
+| `edp switch consultant` | Tech Consultant |
+
+**Aliases:** `be`, `fe`, `mob`, `ops`, `be-review`, `fe-review`, `mob-review`, `ops-review`, `consult`
 
 ---
 
@@ -294,6 +306,13 @@ gh pr create
 ---
 
 ## Changelog
+
+### 1.2.0
+- `edp switch <agent>` command for easy agent switching
+- `edp list` to show all available agents
+- Short aliases (`be`, `fe`, `mob`, `ops`, `be-review`, etc.)
+- CLI Reference section in README
+- Simplified development flow documentation
 
 ### 1.1.0
 - Interactive installer with agent selection

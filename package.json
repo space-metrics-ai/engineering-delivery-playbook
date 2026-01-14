@@ -1,6 +1,6 @@
 {
   "name": "eng-delivery-playbook",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "AI-powered agents and knowledge bases to elevate your engineering team's delivery",
   "author": "Space Metrics AI",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "chatgpt"
   ],
   "bin": {
-    "eng-delivery-playbook": "./bin/cli.js"
+    "eng-delivery-playbook": "./bin/cli.js",
+    "edp": "./bin/cli.js"
   },
   "files": [
     "bin",
