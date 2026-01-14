@@ -15,6 +15,8 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/space-metrics-ai/engineering-delivery-playbook/releases"><img src="https://img.shields.io/github/v/release/space-metrics-ai/engineering-delivery-playbook" alt="Release"></a>
+  <a href="https://www.npmjs.com/package/eng-delivery-playbook"><img src="https://img.shields.io/npm/v/eng-delivery-playbook" alt="npm"></a>
   <img src="https://img.shields.io/badge/agents-10-blue" alt="Agents">
   <img src="https://img.shields.io/badge/knowledge_bases-13-green" alt="Knowledge Bases">
   <img src="https://img.shields.io/badge/license-MIT-yellow" alt="License">
