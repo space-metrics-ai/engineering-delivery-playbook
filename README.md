@@ -130,62 +130,53 @@ specify init . --here --ai claude
 /speckit.implement  → Build it
 ```
 
-### 2. Plan
+### 2. Plan (optional)
 
-For architecture decisions, consult before coding.
+For architecture decisions, switch to Tech Consultant:
 
+```bash
+cp agents/consultant.md CLAUDE.md
 ```
-Agent: Tech Consultant
 
+Then ask:
+```
 "Real-time notifications for 50k DAU. Node.js + Flutter.
 WebSockets vs SSE vs Polling - which and why?"
 ```
 
-### 3. Implement
+### 3. Implement + Test
+
+Your configured agent (e.g., Backend Engineer) handles both:
 
 ```
-Agent: Backend Engineer
-
-"Create POST /api/users/:id/avatar:
-- multipart/form-data, max 5MB
-- Validate JPEG/PNG/WebP
-- Resize 200x200 with Sharp
-- Upload to S3, return CDN URL"
+/speckit.implement
 ```
 
-### 4. Test
+The agent will implement the feature and write tests following best practices.
 
-```
-Agent: Backend Engineer
+### 4. Review
 
-"Write tests for avatar upload:
-- Valid JPEG succeeds
-- >5MB rejected
-- Non-image rejected
-- S3 failure handled
-Use Jest, mock S3"
+Switch to the reviewer agent:
+
+```bash
+cp agents/backend-reviewer.md CLAUDE.md
 ```
 
-### 5. Review
-
+Then ask:
 ```
-Agent: Backend Reviewer
-
-"Review my avatar implementation for:
-- Security vulnerabilities
-- Error handling
-- Test coverage
-Use Conventional Comments"
+"Review my avatar implementation for security, error handling, and test coverage"
 ```
 
-**Format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
+**Review format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
 
-### 6. Ship
+### 5. Ship
 
 ```bash
 git add . && git commit -m "feat(users): add avatar upload"
 gh pr create
 ```
+
+> **Tip:** Keep your primary agent configured. Only switch for specific tasks like architecture consulting or code review.
 
 ---
 
