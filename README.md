@@ -33,6 +33,12 @@
 npx eng-delivery-playbook
 ```
 
+**GitHub Packages:**
+```bash
+npm config set @space-metrics-ai:registry https://npm.pkg.github.com
+npx @space-metrics-ai/eng-delivery-playbook
+```
+
 **curl:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
