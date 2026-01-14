@@ -2,8 +2,6 @@
   <img src="logo.png" alt="Engineering Delivery Playbook Logo" width="640">
 </p>
 
-<h1 align="center">Engineering Delivery Playbook</h1>
-
 <p align="center">
   <strong>AI-powered agents and knowledge bases to elevate your engineering team's delivery.</strong>
 </p>
