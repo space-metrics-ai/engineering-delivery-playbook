@@ -2,10 +2,6 @@
   <img src="logo.png" alt="Engineering Delivery Playbook Logo" width="640">
 </p>
 
-<p align="center">
-  <img src="context-vs-onboarding.png" alt="Engineering Delivery Playbook" width="600">
-</p>
-
 <h1 align="center">Engineering Delivery Playbook</h1>
 
 <p align="center">
@@ -93,6 +89,10 @@ That's it. Now follow the [Development Flow](#development-flow) below.
 ---
 
 ## Development Flow
+
+<p align="center">
+  <img src="context-vs-onboarding.png" alt="Engineering Delivery Playbook" width="600">
+</p>
 
 ```
 SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ──▶ SHIP
