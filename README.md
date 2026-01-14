@@ -75,10 +75,21 @@ specify init . --here --ai claude
 
 ### 3. Configure your AI tool
 
+Choose the agent that matches your task:
+
+| Task | Agent File |
+|------|------------|
+| Backend development | `agents/backend.md` |
+| Frontend development | `agents/frontend.md` |
+| Mobile development | `agents/mobile.md` |
+| DevOps/Infrastructure | `agents/devops.md` |
+| Code review | `agents/*-reviewer.md` |
+| Architecture decisions | `agents/consultant.md` |
+
 **Claude Code / Cursor:**
 ```json
 {
-  "systemPrompt": "You are a Senior Backend Engineer following agents/backend.md"
+  "systemPrompt": "You are a Senior Frontend Engineer following agents/frontend.md"
 }
 ```
 
@@ -86,7 +97,9 @@ specify init . --here --ai claude
 
 **CLI:**
 ```bash
-claude --system-prompt "$(cat agents/backend.md)"
+# Switch agents by changing the file
+claude --system-prompt "$(cat agents/frontend.md)"
+claude --system-prompt "$(cat agents/backend-reviewer.md)"
 ```
 
 ### 4. Start building
