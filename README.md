@@ -26,6 +26,12 @@
 
 ### 1. Install the playbook
 
+**npm (recommended):**
+```bash
+npx eng-delivery-playbook
+```
+
+**curl:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
 ```

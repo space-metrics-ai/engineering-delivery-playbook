@@ -1,0 +1,32 @@
+{
+  "name": "eng-delivery-playbook",
+  "version": "1.0.0",
+  "description": "AI-powered agents and knowledge bases to elevate your engineering team's delivery",
+  "author": "Space Metrics AI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/space-metrics-ai/engineering-delivery-playbook.git"
+  },
+  "homepage": "https://github.com/space-metrics-ai/engineering-delivery-playbook",
+  "keywords": [
+    "ai",
+    "agents",
+    "engineering",
+    "delivery",
+    "playbook",
+    "claude",
+    "cursor",
+    "chatgpt"
+  ],
+  "bin": {
+    "eng-delivery-playbook": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "agents"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
