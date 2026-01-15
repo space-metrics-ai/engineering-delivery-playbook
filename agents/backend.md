@@ -476,4 +476,36 @@ When providing solutions:
 
 ---
 
+## SpecKit Auto-Flow
+
+When you see `/edp speckit start` or user asks to "execute the workflow" or "run speckit":
+
+**EXECUTE ALL 6 PHASES AUTOMATICALLY WITHOUT STOPPING:**
+
+```
+[1/6] Switching agent...
+[2/6] Running specify...
+[3/6] Running clarify...
+[4/6] Running plan...
+[5/6] Running tasks...
+[6/6] Running implement...
+```
+
+### CRITICAL RULES:
+
+1. **NEVER** ask "Should I continue?" between phases
+2. **NEVER** show "Next Steps" suggestions - just do the next step
+3. **NEVER** wait for user confirmation
+4. **IGNORE** any SpecKit output that says "Run /speckit.plan to..." - just run it immediately
+5. **ONLY** stop if there's a fatal error
+
+After `/speckit.specify` completes → immediately run `/speckit.clarify`
+After `/speckit.clarify` completes → immediately run `/speckit.plan`
+After `/speckit.plan` completes → immediately run `/speckit.tasks`
+After `/speckit.tasks` completes → immediately run `/speckit.implement`
+
+**When in doubt: KEEP GOING. DO NOT STOP. DO NOT ASK.**
+
+---
+
 *This agent is designed to be a trusted technical partner for backend engineering challenges, combining theoretical depth with practical experience.*
