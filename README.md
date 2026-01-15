@@ -172,7 +172,35 @@ gh pr create
 edp                      # Install agents (interactive)
 edp switch <agent>       # Switch to a different agent
 edp list                 # List all available agents
+edp speckit <cmd>        # SpecKit workflow automation
 ```
+
+### SpecKit Commands
+
+Automate the full spec-driven development workflow:
+
+```bash
+edp speckit start "<feature>" <agent>   # Start full workflow
+edp speckit init                        # Initialize .specify directory
+edp speckit status                      # Show workflow status
+```
+
+**Example - full automated flow:**
+```bash
+edp speckit start "user authentication with OAuth" be
+```
+
+This will:
+1. Switch to Backend Engineer agent
+2. Run `/speckit.specify`
+3. Run `/speckit.clarify`
+4. Run `/speckit.plan`
+5. Run `/speckit.tasks`
+6. Run `/speckit.implement`
+
+All steps run automatically without confirmation prompts.
+
+### Agent Commands
 
 **Available agents:**
 
@@ -306,6 +334,13 @@ edp list                 # List all available agents
 ---
 
 ## Changelog
+
+### 1.3.0
+- `edp speckit start` for automated full workflow (specify → clarify → plan → tasks → implement)
+- `edp speckit init` to initialize .specify directory
+- `edp speckit status` to check workflow status
+- New knowledge base: `edp-speckit-commands.md`
+- Agent selection with shortcuts (be, fe, mob, ops)
 
 ### 1.2.0
 - `edp switch <agent>` command for easy agent switching
