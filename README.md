@@ -76,19 +76,13 @@ your-project/
         └── ... (13 knowledge bases)
 ```
 
-### 2. Install spec-kit
+### 2. Start building
 
 ```bash
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify init . --here --ai claude
+edp speckit start "Your feature description here" be
 ```
 
-### 3. Start building
-
-```bash
-/speckit.specify "Your feature description here"
-/speckit.implement
-```
+This runs the full workflow automatically: specify → clarify → plan → tasks → implement.
 
 That's it. Now follow the [Development Flow](#development-flow) below.
 
@@ -103,51 +97,33 @@ That's it. Now follow the [Development Flow](#development-flow) below.
 > **AI usage should scale with your business context.** If you're new to the codebase or domain (Day 0-30), use AI sparingly—focus on learning and understanding first. As your context grows (Day 60-120), AI becomes a force multiplier. Remember: AI is an assistant, not a replacement for domain knowledge. You must understand what you're building to validate AI outputs effectively.
 
 ```
-SPECIFY ──▶ PLAN ──▶ IMPLEMENT ──▶ TEST ──▶ REVIEW ──▶ SHIP
+SPECIFY ──▶ CLARIFY ──▶ PLAN ──▶ TASKS ──▶ IMPLEMENT ──▶ REVIEW ──▶ SHIP
 ```
 
-### 1. Specify
+### 1. Build (automated)
 
-Define what you're building with [spec-kit](https://github.com/github/spec-kit):
+Use the automated workflow to specify, plan, and implement in one command:
 
 ```bash
-/speckit.specify "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
+edp speckit start "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage" be
 ```
 
-### 2. Plan (optional)
+This automatically runs:
+1. Switches to Backend Engineer
+2. `/speckit.specify` - Define requirements
+3. `/speckit.clarify` - Resolve ambiguities
+4. `/speckit.plan` - Create technical design
+5. `/speckit.tasks` - Break into tasks
+6. `/speckit.implement` - Build the feature
 
-For architecture decisions, switch to the consultant:
+**Agent shortcuts:** `be` (backend), `fe` (frontend), `mob` (mobile), `ops` (devops)
 
-```bash
-edp switch consultant
-```
-
-Then ask your question:
-```
-"Real-time notifications for 50k DAU. Node.js + Flutter.
-WebSockets vs SSE vs Polling - which and why?"
-```
-
-### 3. Implement
-
-Switch to your engineer agent and implement:
-
-```bash
-edp switch backend
-```
-
-```
-/speckit.implement
-```
-
-The agent implements the feature and writes tests following best practices.
-
-### 4. Review
+### 2. Review
 
 Switch to the reviewer agent:
 
 ```bash
-edp switch backend-reviewer
+edp switch be-review
 ```
 
 Then ask:
@@ -157,7 +133,7 @@ Then ask:
 
 **Review format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
 
-### 5. Ship
+### 3. Ship
 
 ```bash
 git add . && git commit -m "feat(users): add avatar upload"
