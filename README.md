@@ -51,7 +51,7 @@ The installer will:
 
 **Switch agents later:**
 ```bash
-cp agents/frontend.md CLAUDE.md && cp agents/frontend.md .cursorrules
+edp switch frontend
 ```
 
 Structure after install:
