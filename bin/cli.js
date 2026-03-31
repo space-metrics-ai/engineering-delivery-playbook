@@ -5,6 +5,7 @@ const path = require('path');
 const readline = require('readline');
 
 const AGENTS_DIR = 'agents';
+const AGENT_MEMORY_DIR = '.AGENT';
 const SPECIFY_DIR = '.specify';
 
 const AGENTS = {
@@ -165,9 +166,143 @@ function configureAgent(agent, agentsDir) {
   console.log(`  ✓ Created .cursorrules (Cursor)`);
 }
 
+function installMemory() {
+  const packageRoot = path.resolve(__dirname, '..');
+  const sourceDir = path.join(packageRoot, AGENT_MEMORY_DIR);
+  const targetDir = path.join(process.cwd(), AGENT_MEMORY_DIR);
+
+  if (!fs.existsSync(sourceDir)) {
+    console.log('  Warning: .AGENT/ directory not found in package. Skipping memory setup.');
+    return false;
+  }
+
+  if (fs.existsSync(targetDir)) {
+    console.log('  .AGENT/ directory already exists. Skipping (use "edp memory init --force" to reset).');
+    return true;
+  }
+
+  copyRecursive(sourceDir, targetDir);
+  console.log('  ✓ Installed .AGENT/ memory architecture\n');
+  return true;
+}
+
+function memoryInit(force) {
+  const cwd = process.cwd();
+  const targetDir = path.join(cwd, AGENT_MEMORY_DIR);
+
+  if (fs.existsSync(targetDir) && !force) {
+    console.log('\n  .AGENT/ directory already exists.');
+    console.log('  Use "edp memory init --force" to reset.\n');
+    return;
+  }
+
+  if (fs.existsSync(targetDir) && force) {
+    fs.rmSync(targetDir, { recursive: true, force: true });
+  }
+
+  const packageRoot = path.resolve(__dirname, '..');
+  const sourceDir = path.join(packageRoot, AGENT_MEMORY_DIR);
+
+  if (fs.existsSync(sourceDir)) {
+    copyRecursive(sourceDir, targetDir);
+  } else {
+    // Create minimal structure if package source not available
+    const dirs = [
+      'working_memory',
+      'procedural_memory/skills',
+      'semantic_memory/project',
+      'semantic_memory/entities',
+      'episodic_memory/conversations',
+      'episodic_memory/decisions',
+      'meta_memory'
+    ];
+    dirs.forEach(dir => {
+      fs.mkdirSync(path.join(targetDir, dir), { recursive: true });
+    });
+  }
+
+  console.log('\n  ✓ Initialized .AGENT/ memory architecture\n');
+  console.log('  Structure:');
+  console.log('  ──────────');
+  console.log('  .AGENT/');
+  console.log('  ├── working_memory/     Active session context');
+  console.log('  ├── procedural_memory/  How-to knowledge & skills');
+  console.log('  ├── semantic_memory/    Project & entity knowledge');
+  console.log('  ├── episodic_memory/    Conversations & decisions');
+  console.log('  └── meta_memory/        Memory management\n');
+}
+
+function memoryStatus() {
+  const cwd = process.cwd();
+  const agentDir = path.join(cwd, AGENT_MEMORY_DIR);
+
+  if (!fs.existsSync(agentDir)) {
+    console.log('\n  No .AGENT/ directory found.');
+    console.log('  Run "edp memory init" to initialize.\n');
+    return;
+  }
+
+  const categories = [
+    { name: 'working_memory', label: 'Working Memory', question: 'What am I doing now?' },
+    { name: 'procedural_memory', label: 'Procedural Memory', question: 'How do I do this?' },
+    { name: 'semantic_memory', label: 'Semantic Memory', question: 'What do I know?' },
+    { name: 'episodic_memory', label: 'Episodic Memory', question: 'What happened before?' },
+    { name: 'meta_memory', label: 'Meta Memory', question: 'How can I improve?' },
+  ];
+
+  console.log('\n  .AGENT/ Memory Status\n');
+
+  categories.forEach(cat => {
+    const catDir = path.join(agentDir, cat.name);
+    const exists = fs.existsSync(catDir);
+    const icon = exists ? '✓' : '✗';
+    let count = 0;
+    if (exists) {
+      count = countFiles(catDir);
+    }
+    console.log(`  ${icon} ${cat.label.padEnd(22)} ${cat.question.padEnd(28)} (${count} files)`);
+  });
+  console.log('');
+}
+
+function countFiles(dir) {
+  let count = 0;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      count += countFiles(path.join(dir, entry.name));
+    } else if (entry.name !== '.gitkeep') {
+      count++;
+    }
+  }
+  return count;
+}
+
+function handleMemory(args) {
+  const subCommand = args[0];
+
+  if (!subCommand || subCommand === 'help' || subCommand === '--help') {
+    console.log('\n  EDP Memory Commands\n');
+    console.log('  Usage:');
+    console.log('  ──────');
+    console.log('  edp memory init            Initialize .AGENT/ memory architecture');
+    console.log('  edp memory init --force    Reset .AGENT/ to defaults');
+    console.log('  edp memory status          Show memory status');
+    console.log('  edp memory help            Show this help\n');
+  } else if (subCommand === 'init') {
+    const force = args.includes('--force');
+    memoryInit(force);
+  } else if (subCommand === 'status') {
+    memoryStatus();
+  } else {
+    console.log('\n  Unknown memory command: ' + subCommand);
+    handleMemory(['help']);
+  }
+}
+
 async function install() {
   console.log('\n  Engineering Delivery Playbook\n');
-  console.log('  Installing agents and knowledge bases...\n');
+  console.log('  Installing agents, knowledge bases & memory architecture...\n');
 
   const packageRoot = path.resolve(__dirname, '..');
   const sourceDir = path.join(packageRoot, AGENTS_DIR);
@@ -185,7 +320,10 @@ async function install() {
 
   try {
     copyRecursive(sourceDir, targetDir);
-    console.log('  ✓ Installed agents to ./agents/\n');
+    console.log('  ✓ Installed agents to ./agents/');
+
+    // Install .AGENT/ memory architecture
+    installMemory();
 
     const selectedAgent = await selectAgent();
 
@@ -199,7 +337,8 @@ async function install() {
     console.log('  ────────────');
     console.log('  edp switch backend      # Switch to Backend Engineer');
     console.log('  edp switch be-review    # Switch to Backend Reviewer');
-    console.log('  edp list                # Show all agents\n');
+    console.log('  edp list                # Show all agents');
+    console.log('  edp memory status       # Check memory architecture\n');
     console.log('  Docs: https://github.com/space-metrics-ai/engineering-delivery-playbook\n');
   } catch (error) {
     console.error('  Error:', error.message);
@@ -390,12 +529,14 @@ function showHelp() {
   console.log('  edp switch <agent>     Switch to a different agent');
   console.log('  edp list               List all available agents');
   console.log('  edp speckit <cmd>      SpecKit workflow commands');
+  console.log('  edp memory <cmd>       Memory architecture commands');
   console.log('  edp help               Show this help\n');
   console.log('  Examples:');
   console.log('  ─────────');
   console.log('  edp switch backend');
   console.log('  edp switch frontend-reviewer');
-  console.log('  edp speckit start "feature" be\n');
+  console.log('  edp speckit start "feature" be');
+  console.log('  edp memory init\n');
 }
 
 async function main() {
@@ -414,6 +555,8 @@ async function main() {
     switchAgent(agentKey);
   } else if (command === 'speckit') {
     handleSpeckit(args.slice(1));
+  } else if (command === 'memory') {
+    handleMemory(args.slice(1));
   } else if (command === 'list') {
     listAgents();
   } else if (command === 'help' || command === '--help' || command === '-h') {

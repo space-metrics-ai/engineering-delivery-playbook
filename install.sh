@@ -33,6 +33,16 @@ curl -sL "https://github.com/$REPO/archive/$BRANCH.tar.gz" | tar -xz -C "$TMP_DI
 # Copy agents folder
 cp -r "$TMP_DIR/engineering-delivery-playbook-$BRANCH/agents" "$TARGET_DIR/"
 
+# Copy .AGENT/ memory architecture (skip if exists)
+if [ ! -d "$TARGET_DIR/.AGENT" ]; then
+  if [ -d "$TMP_DIR/engineering-delivery-playbook-$BRANCH/.AGENT" ]; then
+    cp -r "$TMP_DIR/engineering-delivery-playbook-$BRANCH/.AGENT" "$TARGET_DIR/"
+    echo "✓ Installed .AGENT/ memory architecture"
+  fi
+else
+  echo ".AGENT/ already exists, skipping memory setup"
+fi
+
 echo ""
 echo "Done! Agents installed to ./agents/"
 echo ""

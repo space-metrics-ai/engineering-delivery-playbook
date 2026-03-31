@@ -10,6 +10,7 @@
   <a href="#getting-started">Getting Started</a> •
   <a href="#development-flow">Flow</a> •
   <a href="#agents">Agents</a> •
+  <a href="#memory-architecture">Memory</a> •
   <a href="#knowledge-base">Knowledge</a> •
   <a href="resources/">Resources</a>
 </p>
@@ -19,6 +20,7 @@
   <a href="https://www.npmjs.com/package/eng-delivery-playbook"><img src="https://img.shields.io/npm/v/eng-delivery-playbook" alt="npm"></a>
   <img src="https://img.shields.io/badge/agents-10-blue" alt="Agents">
   <img src="https://img.shields.io/badge/knowledge_bases-13-green" alt="Knowledge Bases">
+  <img src="https://img.shields.io/badge/memory-5_types-red" alt="Memory Types">
   <img src="https://img.shields.io/badge/license-MIT-yellow" alt="License">
 </p>
 
@@ -58,22 +60,28 @@ Structure after install:
 
 ```
 your-project/
-└── agents/
-    ├── backend.md
-    ├── frontend.md
-    ├── mobile.md
-    ├── devops.md
-    ├── backend-reviewer.md
-    ├── frontend-reviewer.md
-    ├── mobile-reviewer.md
-    ├── devops-reviewer.md
-    ├── consultant.md
-    ├── ai-metrics.md
-    └── knowledge/
-        ├── design-patterns.md
-        ├── engineering-principles.md
-        ├── testing-strategies.md
-        └── ... (13 knowledge bases)
+├── agents/
+│   ├── backend.md
+│   ├── frontend.md
+│   ├── mobile.md
+│   ├── devops.md
+│   ├── backend-reviewer.md
+│   ├── frontend-reviewer.md
+│   ├── mobile-reviewer.md
+│   ├── devops-reviewer.md
+│   ├── consultant.md
+│   ├── ai-metrics.md
+│   └── knowledge/
+│       ├── design-patterns.md
+│       ├── engineering-principles.md
+│       ├── testing-strategies.md
+│       └── ... (13 knowledge bases)
+└── .AGENT/
+    ├── working_memory/
+    ├── procedural_memory/
+    ├── semantic_memory/
+    ├── episodic_memory/
+    └── meta_memory/
 ```
 
 ### 2. Start building
@@ -149,6 +157,7 @@ edp                      # Install agents (interactive)
 edp switch <agent>       # Switch to a different agent
 edp list                 # List all available agents
 edp speckit <cmd>        # SpecKit workflow automation
+edp memory <cmd>         # Memory architecture commands
 ```
 
 ### SpecKit Commands
@@ -175,6 +184,16 @@ This will:
 6. Run `/speckit.implement`
 
 All steps run automatically without confirmation prompts.
+
+### Memory Commands
+
+Manage the AI Agent Memory Architecture:
+
+```bash
+edp memory init            # Initialize .AGENT/ directory
+edp memory init --force    # Reset .AGENT/ to defaults
+edp memory status          # Show memory status
+```
 
 ### Agent Commands
 
@@ -240,6 +259,73 @@ All steps run automatically without confirmation prompts.
 |-------|---------|------|
 | **Tech Consultant** | Architecture advice (no code) | [View](agents/consultant.md) |
 | **AI Metrics** | Track AI usage and ROI | [View](agents/ai-metrics.md) |
+
+---
+
+## Memory Architecture
+
+The `.AGENT/` directory implements a **5-type memory system** inspired by cognitive science, giving AI agents persistent context across sessions.
+
+```
+.AGENT/
+├── working_memory/          "What am I doing now?"
+│   ├── context.json            Current conversation and goals
+│   └── stack.json              Current task stack
+├── procedural_memory/       "How do I do this?"
+│   ├── AGENTS.md               Agent rules and behavior
+│   └── skills/
+│       ├── code_review.md      PR review steps
+│       └── deploy_pipeline.md  Deployment checklist
+├── semantic_memory/         "What do I know?"
+│   ├── project/
+│   │   ├── architecture.md     System design
+│   │   └── conventions.md      Coding standards
+│   └── entities/
+│       ├── people.json         Team members
+│       └── services.json       Internal services
+├── episodic_memory/         "What happened before?"
+│   ├── conversations/          Conversation logs
+│   └── decisions/              Important decisions
+└── meta_memory/             "How can I improve memory?"
+    ├── memory_config.json      Task reflections
+    └── reflections.jsonl       Memory limits
+```
+
+### Memory Types
+
+| Type | Question | Purpose | Persistence |
+|------|----------|---------|-------------|
+| **Working** | What am I doing now? | Active session context | Session |
+| **Procedural** | How do I do this? | How-to knowledge & skills | Permanent |
+| **Semantic** | What do I know? | Project & entity knowledge | Permanent |
+| **Episodic** | What happened before? | Past activity & decisions | Rolling |
+| **Meta** | How can I improve? | Memory management | Permanent |
+
+### Setup
+
+```bash
+edp memory init          # Initialize .AGENT/ in your project
+edp memory status        # Check memory status
+edp memory init --force  # Reset to defaults
+```
+
+The memory architecture is auto-installed when you run `npx eng-delivery-playbook`. To add it to an existing project:
+
+```bash
+edp memory init
+```
+
+### Customization
+
+Edit the files inside `.AGENT/` to match your project:
+
+- **`semantic_memory/project/architecture.md`** — Document your system design
+- **`semantic_memory/project/conventions.md`** — Define your coding standards
+- **`semantic_memory/entities/people.json`** — Add your team members
+- **`semantic_memory/entities/services.json`** — List your services
+- **`procedural_memory/skills/`** — Add custom skills (workflows your agent should know)
+
+Episodic memory (`conversations/` and `decisions/`) is populated automatically as the agent works.
 
 ---
 
@@ -310,6 +396,17 @@ All steps run automatically without confirmation prompts.
 ---
 
 ## Changelog
+
+### 1.4.0
+- `.AGENT/` AI Agent Memory Architecture (5 memory types)
+- `edp memory init` to initialize memory structure
+- `edp memory status` to check memory status
+- Working memory: session context and task stack
+- Procedural memory: agent rules, code review and deploy pipeline skills
+- Semantic memory: architecture, conventions, people, services
+- Episodic memory: conversations and decisions tracking
+- Meta memory: configuration and reflections
+- Auto-install `.AGENT/` during `npx eng-delivery-playbook`
 
 ### 1.3.0
 - `edp speckit start` for automated full workflow (specify → clarify → plan → tasks → implement)
