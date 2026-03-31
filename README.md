@@ -12,15 +12,15 @@
   <a href="#agents">Agents</a> •
   <a href="#ai-agent-memory-architecture">Memory</a> •
   <a href="#openspec-integration">OpenSpec</a> •
-  <a href="#knowledge-base">Knowledge</a> •
-  <a href="resources/">Resources</a>
+  <a href="#claudemd-optimization">CLAUDE.md</a> •
+  <a href="#knowledge-base">Knowledge</a>
 </p>
 
 <p align="center">
   <a href="https://github.com/space-metrics-ai/engineering-delivery-playbook/releases"><img src="https://img.shields.io/github/v/release/space-metrics-ai/engineering-delivery-playbook" alt="Release"></a>
   <a href="https://www.npmjs.com/package/eng-delivery-playbook"><img src="https://img.shields.io/npm/v/eng-delivery-playbook" alt="npm"></a>
   <img src="https://img.shields.io/badge/agents-10-blue" alt="Agents">
-  <img src="https://img.shields.io/badge/knowledge_bases-13-green" alt="Knowledge Bases">
+  <img src="https://img.shields.io/badge/knowledge_bases-14-green" alt="Knowledge Bases">
   <img src="https://img.shields.io/badge/memory-5_types-red" alt="Memory Types">
   <img src="https://img.shields.io/badge/openspec-integrated-purple" alt="OpenSpec">
   <img src="https://img.shields.io/badge/license-MIT-yellow" alt="License">
@@ -30,15 +30,16 @@
 
 ## What Is This?
 
-The **Engineering Delivery Playbook** is a turnkey framework that gives your AI coding agents (Claude Code, Cursor, Copilot, Windsurf, etc.) everything they need to deliver production-grade code:
+A turnkey framework that gives your AI coding agents (Claude Code, Cursor, Copilot, Windsurf, etc.) everything they need to deliver production-grade code:
 
-- **10 specialized agents** — Backend, Frontend, Mobile, DevOps engineers + reviewers + consultant
-- **13 knowledge bases** — Design patterns, testing strategies, system design, and more
-- **5-type cognitive memory** — Persistent context that survives across sessions
-- **OpenSpec integration** — Spec-driven development so AI builds the *right* thing
-- **1 command to start** — `npx eng-delivery-playbook`
-
-> **AI is a force multiplier, not a replacement for understanding.** The playbook scales AI usage with your business context — from learning assistant (Day 0-30) to force multiplier (Day 90+).
+| Feature | What |
+|---------|------|
+| **10 agents** | Backend, Frontend, Mobile, DevOps engineers + reviewers + consultant |
+| **14 knowledge bases** | Design patterns, testing, system design, CLAUDE.md best practices |
+| **5-type memory** | Persistent context that survives across sessions |
+| **OpenSpec** | Spec-driven development — AI builds the *right* thing |
+| **Lean CLAUDE.md** | ~600 tokens, not 10k+ — follows Boris Cherny's best practices |
+| **Auto-detect** | Agent auto-selected based on your codebase |
 
 ---
 
@@ -51,25 +52,17 @@ npx eng-delivery-playbook
 ```
 
 <details>
-<summary>Alternative installation methods</summary>
+<summary>Alternative methods</summary>
 
-**GitHub Packages:**
 ```bash
+# GitHub Packages
 npm config set @space-metrics-ai:registry https://npm.pkg.github.com
 npx @space-metrics-ai/eng-delivery-playbook
-```
 
-**curl:**
-```bash
+# curl
 curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delivery-playbook/main/install.sh | bash
 ```
 </details>
-
-The installer will:
-1. Copy all agents and knowledge bases to `./agents/`
-2. Initialize `.AGENT/` memory architecture
-3. Ask which agent you want to use
-4. Auto-configure `CLAUDE.md` and `.cursorrules`
 
 ### 2. Install OpenSpec
 
@@ -81,17 +74,14 @@ openspec init
 ### 3. Start building
 
 ```bash
-# Switch to your agent
-edp switch backend
+# Just describe the feature — agent is auto-detected from your codebase
+eng-play openspec start "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
 
-# Propose a feature with OpenSpec
-/opsx:propose "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
-
-# Or use the EDP automated flow
-edp openspec start "Add avatar upload" be
+# Or specify an agent explicitly
+eng-play openspec start "responsive dashboard" fe
 ```
 
-That's it. Now follow the [Development Flow](#development-flow) below.
+That's it. The CLI auto-detects the best agent, generates a structured prompt, and kicks off the OpenSpec workflow.
 
 ---
 
@@ -101,14 +91,10 @@ That's it. Now follow the [Development Flow](#development-flow) below.
   <img src="context-vs-onboarding.png" alt="Context vs Onboarding" width="600">
 </p>
 
-### The Philosophy
-
 ```
-Traditional:  Vague idea → Start coding → Discover issues → Rewrite → Tech debt
-Spec-driven:  Clear spec → AI understands context → Correct implementation → Ship fast
+Traditional:  Vague idea → Code → Issues → Rewrite → Tech debt
+Spec-driven:  Clear spec → AI understands → Correct code → Ship
 ```
-
-AI without context generates code that "works" but creates debt. **Specs give AI the full picture before it writes a single line.**
 
 ### The Flow
 
@@ -120,57 +106,36 @@ PROPOSE ──▶ DESIGN ──▶ TASKS ──▶ IMPLEMENT ──▶ REVIEW �
  proposal   approach    down      agent         agent      & deploy
 ```
 
-### 1. Propose (OpenSpec)
-
-Use OpenSpec to create a spec-driven proposal before writing any code:
+### 1. Propose
 
 ```bash
-/opsx:propose "Add remember me checkbox with 30-day sessions"
+eng-play openspec start "Add remember me checkbox with 30-day sessions"
 ```
 
-This generates:
-- `proposal.md` — Strategic rationale and scope
-- `specs/` — Requirements with SHALL assertions and GIVEN/WHEN/THEN scenarios
-- `design.md` — Technical approach and architecture decisions
-- `tasks.md` — Implementation checklist
+Generates `openspec/prompt.md` with Environment, Goal, State, Actions. Then tell your AI:
+
+```
+"Read openspec/prompt.md and execute the full workflow"
+```
 
 ### 2. Implement
 
-Switch to the right agent and apply the plan:
-
-```bash
-edp switch backend
-/opsx:apply
-```
-
-Or use the EDP automated flow:
-
-```bash
-edp openspec start "Add avatar upload: max 5MB, JPEG/PNG" be
-```
-
-**Agent shortcuts:** `be` (backend), `fe` (frontend), `mob` (mobile), `ops` (devops)
+The agent runs `/opsx:propose` then `/opsx:apply` automatically.
 
 ### 3. Review
 
-Switch to the reviewer agent:
-
 ```bash
-edp switch be-review
+eng-play switch be-review
 ```
-
-Then:
 ```
 "Review my implementation for security, error handling, and test coverage"
 ```
 
-**Review format:** `blocker:` | `issue:` | `suggestion:` | `nit:`
-
 ### 4. Ship
 
 ```bash
-/opsx:archive    # Archive the completed change
-git add . && git commit -m "feat(users): add avatar upload"
+/opsx:archive
+git add . && git commit -m "feat(users): add remember me"
 gh pr create
 ```
 
@@ -180,46 +145,40 @@ gh pr create
 
 ### Engineers
 
-| Agent | Technologies | Alias | Link |
-|-------|-------------|-------|------|
-| **Backend** | Java, Go, Node.js, TypeScript, Kotlin, Python | `be` | [View](agents/backend.md) |
-| **Frontend** | React, Vue.js, TypeScript, Next.js, Nuxt | `fe` | [View](agents/frontend.md) |
-| **Mobile** | Flutter, Android (Kotlin), iOS (Swift) | `mob` | [View](agents/mobile.md) |
-| **DevOps** | Kubernetes, Terraform, Docker, AWS/GCP/Azure | `ops` | [View](agents/devops.md) |
+| Agent | Technologies | Alias |
+|-------|-------------|-------|
+| **Backend** | Java, Go, Node.js, TypeScript, Kotlin, Python | `be` |
+| **Frontend** | React, Vue.js, TypeScript, Next.js, Nuxt | `fe` |
+| **Mobile** | Flutter, Android (Kotlin), iOS (Swift) | `mob` |
+| **DevOps** | Kubernetes, Terraform, Docker, AWS/GCP/Azure | `ops` |
 
 ### Reviewers
 
-| Agent | Focus | Alias | Link |
-|-------|-------|-------|------|
-| **Backend** | Security, performance, patterns | `be-review` | [View](agents/backend-reviewer.md) |
-| **Frontend** | Accessibility, Core Web Vitals | `fe-review` | [View](agents/frontend-reviewer.md) |
-| **Mobile** | Platform guidelines, performance | `mob-review` | [View](agents/mobile-reviewer.md) |
-| **DevOps** | Security, reliability, IaC | `ops-review` | [View](agents/devops-reviewer.md) |
+| Agent | Focus | Alias |
+|-------|-------|-------|
+| **Backend** | Security, performance, patterns | `be-review` |
+| **Frontend** | Accessibility, Core Web Vitals | `fe-review` |
+| **Mobile** | Platform guidelines, performance | `mob-review` |
+| **DevOps** | Security, reliability, IaC | `ops-review` |
 
 ### Specialists
 
-| Agent | Purpose | Alias | Link |
-|-------|---------|-------|------|
-| **Tech Consultant** | Architecture advice (no code) | `consult` | [View](agents/consultant.md) |
-| **AI Metrics** | Track AI usage and ROI | — | [View](agents/ai-metrics.md) |
-
-<details>
-<summary>Switching agents</summary>
+| Agent | Purpose | Alias |
+|-------|---------|-------|
+| **Tech Consultant** | Architecture advice (no code) | `consult` |
+| **AI Metrics** | Track AI usage and ROI | — |
 
 ```bash
-edp switch backend          # Full name
-edp switch be               # Short alias
-edp list                    # Show all available agents
+eng-play switch backend    # Full name
+eng-play switch be         # Alias
+eng-play list              # Show all
 ```
-
-Switching updates both `CLAUDE.md` and `.cursorrules` automatically.
-</details>
 
 ---
 
 ## AI Agent Memory Architecture
 
-The `.AGENT/` directory implements a **5-type cognitive memory system** inspired by how the human brain organizes knowledge — giving AI agents persistent context across sessions.
+The `.AGENT/` directory implements a **5-type cognitive memory system** — persistent context across sessions.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -261,136 +220,73 @@ The `.AGENT/` directory implements a **5-type cognitive memory system** inspired
 
 ### Memory Types
 
-| Type | Question | Purpose | Persistence | Color |
-|------|----------|---------|-------------|-------|
-| **Working** | What am I doing now? | Active session context — current goals, files, changes | Session | Blue |
-| **Procedural** | How do I do this? | How-to knowledge — agent rules, reusable skill workflows | Permanent | Green |
-| **Semantic** | What do I know? | Stored knowledge — architecture, conventions, team, services | Permanent | Red |
-| **Episodic** | What happened before? | Past activity — conversation logs, important decisions | Rolling | Yellow |
-| **Meta** | How can I improve? | Memory management — config, reflections, limits | Permanent | Purple |
+| Type | Question | Purpose | Persistence |
+|------|----------|---------|-------------|
+| **Working** | What am I doing now? | Active session context | Session |
+| **Procedural** | How do I do this? | Skills & agent rules | Permanent |
+| **Semantic** | What do I know? | Architecture, team, services | Permanent |
+| **Episodic** | What happened before? | Conversations & decisions | Rolling |
+| **Meta** | How can I improve? | Memory config & reflections | Permanent |
 
 ### How It Works
 
 ```
-┌──────────┐     ┌──────────────┐     ┌──────────────┐
-│  Agent   │────▶│   Working    │────▶│   Episodic   │
-│  starts  │     │   Memory     │     │   Memory     │
-│  session │     │  (active)    │     │  (saved)     │
-└──────────┘     └──────┬───────┘     └──────────────┘
-                        │
-                 ┌──────▼───────┐
-                 │  Procedural  │ ◀── Skills & rules
-                 │  + Semantic  │ ◀── Project knowledge
-                 │   Memory     │
-                 └──────┬───────┘
-                        │
-                 ┌──────▼───────┐
-                 │    Meta      │ ◀── Self-improvement
-                 │   Memory     │
-                 └──────────────┘
+Session starts → Load working memory (context)
+       │
+       ├── Read procedural memory (skills, rules)
+       ├── Read semantic memory (architecture, team)
+       │
+Session ends  → Save to episodic memory (conversations, decisions)
+       │
+Over time     → Meta memory optimizes recall
 ```
-
-1. **Session starts** → Agent loads working memory (current context)
-2. **Agent works** → Reads procedural memory (how-to) + semantic memory (project knowledge)
-3. **Session ends** → Key interactions saved to episodic memory (conversations, decisions)
-4. **Over time** → Meta memory tracks what works and optimizes recall
 
 ### Setup
 
 ```bash
-edp memory init          # Initialize .AGENT/ in your project
-edp memory status        # Check memory status
-edp memory init --force  # Reset to defaults
+eng-play memory init          # Initialize .AGENT/
+eng-play memory status        # Check status
+eng-play memory init --force  # Reset to defaults
 ```
 
 ### Customization
 
-Edit the files inside `.AGENT/` to match your project:
-
-| File | What to customize |
-|------|-------------------|
-| `semantic_memory/project/architecture.md` | Your system design, tech stack, data flow |
-| `semantic_memory/project/conventions.md` | Your coding standards, naming, git conventions |
-| `semantic_memory/entities/people.json` | Your team members, roles, focus areas |
-| `semantic_memory/entities/services.json` | Your services, APIs, external dependencies |
-| `procedural_memory/skills/*.md` | Add custom skills (workflows your agent should know) |
-
-Episodic memory (`conversations/` and `decisions/`) is populated automatically as the agent works.
+| File | Customize |
+|------|-----------|
+| `semantic_memory/project/architecture.md` | Your system design |
+| `semantic_memory/project/conventions.md` | Your coding standards |
+| `semantic_memory/entities/people.json` | Your team members |
+| `semantic_memory/entities/services.json` | Your services |
+| `procedural_memory/skills/*.md` | Add custom workflows |
 
 ---
 
 ## OpenSpec Integration
 
-[OpenSpec](https://openspec.dev/) is a lightweight spec-driven framework that acts as a **universal planning layer** for AI coding agents. It integrates natively with 30+ tools including Claude Code, Cursor, and Copilot.
+[OpenSpec](https://openspec.dev/) — lightweight spec-driven framework, universal planning layer for 30+ AI coding agents.
 
-### Why OpenSpec?
+### Why Specs?
 
-| Without specs | With OpenSpec |
-|--------------|---------------|
-| AI guesses requirements | AI reads structured specs |
-| Context lost between sessions | Specs persist in your repo |
+| Without | With OpenSpec |
+|---------|---------------|
+| AI guesses | AI reads structured specs |
+| Context lost between sessions | Specs persist in repo |
 | Review code diffs only | Review **intent** via spec deltas |
-| Plans exist in chat only | Plans live alongside code |
 
-### Installation
-
-```bash
-npm install -g @fission-ai/openspec@latest
-cd your-project
-openspec init
-```
-
-### Core Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
-| `/opsx:propose <feature>` | Create a new feature proposal with specs, design, and tasks |
-| `/opsx:apply` | Execute implementation tasks from the proposal |
-| `/opsx:verify` | Validate implementation against specs |
+| `/opsx:propose <feature>` | Create proposal with specs, design, tasks |
+| `/opsx:apply` | Implement from proposal |
+| `/opsx:verify` | Validate against specs |
 | `/opsx:archive` | Archive completed changes |
 | `/opsx:continue` | Resume in-progress work |
-| `/opsx:sync` | Synchronize specifications |
-
-<details>
-<summary>Extended commands</summary>
-
-| Command | Description |
-|---------|-------------|
-| `/opsx:new` | Initialize fresh proposals |
-| `/opsx:ff` | Fast-forward changes |
-| `/opsx:bulk-archive` | Archive multiple changes |
-| `/opsx:onboard` | Team onboarding |
-
-Enable extended workflow:
-```bash
-openspec config profile
-openspec update
-```
-</details>
-
-### Spec Structure
-
-```
-openspec/
-├── specs/                    # Living specifications
-│   ├── auth-login/spec.md
-│   ├── auth-session/spec.md
-│   └── checkout-cart/spec.md
-└── changes/                  # Change proposals
-    └── add-remember-me/
-        ├── proposal.md         Strategic rationale & scope
-        ├── design.md           Technical approach
-        ├── tasks.md            Implementation checklist
-        └── specs/              Requirement changes (deltas)
-```
 
 ### Spec Format
 
-Specs use structured requirements and scenarios:
-
 ```markdown
 ## Requirements
-- The system SHALL expire sessions after a configured duration
 - The system SHALL support "remember me" with extended 30-day sessions
 
 ## Scenarios
@@ -399,9 +295,7 @@ WHEN they log in successfully
 THEN a 30-day session token is created
 ```
 
-### Review Intent, Not Just Code
-
-OpenSpec generates **spec deltas** that show what changed in system intent:
+### Spec Deltas — Review Intent, Not Just Code
 
 ```diff
 - The system SHALL expire sessions after a configured duration.
@@ -411,58 +305,116 @@ OpenSpec generates **spec deltas** that show what changed in system intent:
 
 ---
 
+## CLAUDE.md Optimization
+
+Based on [Boris Cherny's workflow](https://alirezarezvani.medium.com/your-claude-md-is-probably-wrong-7-mistakes-boris-cherny-never-makes-6d3e5e41f4b7) (Staff Engineer @ Anthropic).
+
+### The Problem
+
+Most devs: **500+ lines (10k+ tokens)**. Above 32k tokens, models lose 50%+ recall.
+
+### Our Solution
+
+`eng-play switch` generates a **lean CLAUDE.md (~30 lines, ~600 tokens)** that points Claude to read agent files on demand, instead of dumping everything upfront.
+
+```
+Before: CLAUDE.md = full agent (~500 lines, ~15k tokens)  ← context stuffing
+After:  CLAUDE.md = lean pointer (~30 lines, ~600 tokens) ← on-demand loading
+```
+
+### What's in the lean CLAUDE.md
+
+```markdown
+# CLAUDE.md
+
+## Context
+my-project — Active agent: Backend Engineer.
+Full agent rules: agents/backend.md
+
+## Agent
+Read and follow agents/backend.md for all guidelines.
+Reference agents/knowledge/ for patterns and principles.
+
+## Standards
+- Follow conventions in agents/backend.md
+- PR size < 400 lines, coverage >= 80%
+- Use OpenSpec (/opsx:propose, /opsx:apply)
+
+## Memory
+Read .AGENT/ for persistent context.
+
+## Out of Scope
+- Don't modify CI/CD without asking
+- Don't commit to main directly
+
+## Learnings
+<!-- Add from PRs: - [YYYY-MM-DD] description -->
+```
+
+### The 7 Anti-Patterns (Avoided)
+
+1. **Context Stuffing** — Lean pointer, not full dump
+2. **Static Memory** — Learnings section, monthly audit
+3. **Instruction Collision** — Single source per topic
+4. **Over-Documentation** — Only non-obvious conventions
+5. **Missing Scope** — Explicit Out of Scope section
+6. **Temporal Confusion** — Current State with dates
+7. **Team Sync Gap** — CLAUDE.md in git, team contributes
+
+> Full guide: [agents/knowledge/claude-md-best-practices.md](agents/knowledge/claude-md-best-practices.md)
+
+---
+
 ## CLI Reference
 
 ```bash
-edp                           # Install agents (interactive)
-edp switch <agent>            # Switch to a different agent
-edp list                      # List all available agents
-edp openspec start <feat> <agent>  # Automated OpenSpec workflow
-edp memory <cmd>              # Memory architecture commands
+eng-play                                    # Install (interactive)
+eng-play switch <agent>                     # Switch agent
+eng-play list                               # List agents
+eng-play openspec start "<feature>"         # Start workflow (auto-detect agent)
+eng-play openspec start "<feature>" <agent> # Start with specific agent
+eng-play openspec init                      # Initialize openspec/
+eng-play openspec status                    # Show openspec status
+eng-play memory init                        # Initialize .AGENT/
+eng-play memory status                      # Show memory status
+eng-play memory init --force                # Reset .AGENT/
 ```
 
-### OpenSpec Commands
+> `edp` still works as an alias for backward compatibility.
 
-Automate the full spec-driven development workflow:
+### Auto-Detect Agent
 
-```bash
-edp openspec start "<feature>" <agent>   # Start full workflow
-edp openspec init                        # Initialize openspec directory
-edp openspec status                      # Show workflow status
+When you omit the agent from `eng-play openspec start`, the CLI scans your codebase:
+
+| Signal | Agent |
+|--------|-------|
+| `package.json` with React/Vue/Next | Frontend |
+| `pom.xml`, `go.mod`, `requirements.txt` | Backend |
+| `pubspec.yaml`, `Podfile`, `AndroidManifest.xml` | Mobile |
+| `Dockerfile`, `terraform.tf`, `.github/workflows` | DevOps |
+
+### Generated Prompt Format
+
+`openspec/prompt.md` uses a structured Environment/Goal/State/Actions format:
+
+```markdown
+## Environment
+- Project: my-app
+- Agent: Backend Engineer (auto-detected)
+- Git: yes | Tests: yes | CI/CD: yes | Memory: .AGENT/ active
+
+## Goal
+Add user authentication with OAuth
+
+## State
+- Agent: Backend Engineer (switched)
+- OpenSpec: initialized
+
+## Actions
+1. /opsx:propose — Generate proposal, specs, design, tasks
+2. /opsx:apply — Implement all tasks
+3. /opsx:verify — Validate against specs
 ```
-
-**Example — full automated flow:**
-```bash
-edp openspec start "user authentication with OAuth" be
-```
-
-This will:
-1. Switch to Backend Engineer agent
-2. Run `/opsx:propose` with the feature description
-3. Run `/opsx:apply` to implement
-4. Show progress: `[1/3]`, `[2/3]`, `[3/3]`
-
-### Memory Commands
-
-```bash
-edp memory init            # Initialize .AGENT/ directory
-edp memory init --force    # Reset .AGENT/ to defaults
-edp memory status          # Show memory status
-```
-
-### Agent Commands
-
-| Command | Agent | Alias |
-|---------|-------|-------|
-| `edp switch backend` | Backend Engineer | `be` |
-| `edp switch frontend` | Frontend Engineer | `fe` |
-| `edp switch mobile` | Mobile Engineer | `mob` |
-| `edp switch devops` | DevOps Engineer | `ops` |
-| `edp switch backend-reviewer` | Backend Reviewer | `be-review` |
-| `edp switch frontend-reviewer` | Frontend Reviewer | `fe-review` |
-| `edp switch mobile-reviewer` | Mobile Reviewer | `mob-review` |
-| `edp switch devops-reviewer` | DevOps Reviewer | `ops-review` |
-| `edp switch consultant` | Tech Consultant | `consult` |
 
 ---
 
@@ -470,31 +422,33 @@ edp memory status          # Show memory status
 
 ### Fundamentals
 
-| Topic | Description | Link |
-|-------|-------------|------|
-| Design Patterns | GoF, SOLID, DDD patterns | [View](agents/knowledge/design-patterns.md) |
-| Engineering Principles | KISS, DRY, YAGNI, and more | [View](agents/knowledge/engineering-principles.md) |
-| System Design | Scalability, availability, consistency | [View](agents/knowledge/system-design.md) |
-| Testing Strategies | Unit, integration, e2e, TDD | [View](agents/knowledge/testing-strategies.md) |
+| Topic | Link |
+|-------|------|
+| Design Patterns | [View](agents/knowledge/design-patterns.md) |
+| Engineering Principles | [View](agents/knowledge/engineering-principles.md) |
+| System Design | [View](agents/knowledge/system-design.md) |
+| Testing Strategies | [View](agents/knowledge/testing-strategies.md) |
 
 ### Platform
 
-| Topic | Description | Link |
-|-------|-------------|------|
-| Frontend Development | React, Vue, performance, a11y | [View](agents/knowledge/frontend-development.md) |
-| Mobile Development | Flutter, native Android/iOS | [View](agents/knowledge/mobile-development.md) |
-| DevOps Practices | CI/CD, IaC, monitoring | [View](agents/knowledge/devops-practices.md) |
+| Topic | Link |
+|-------|------|
+| Frontend Development | [View](agents/knowledge/frontend-development.md) |
+| Mobile Development | [View](agents/knowledge/mobile-development.md) |
+| DevOps Practices | [View](agents/knowledge/devops-practices.md) |
 
 ### Process
 
-| Topic | Description | Link |
-|-------|-------------|------|
-| OpenSpec | Spec-driven development workflow | [View](agents/knowledge/openspec.md) |
-| Code Review | Review guidelines and checklists | [View](agents/knowledge/code-review-guidelines.md) |
-| PR Templates | Standardized PR descriptions | [View](agents/knowledge/pr-templates.md) |
-| Labels | Issue and PR label conventions | [View](agents/knowledge/labels-conventions.md) |
-| CI/CD Gates | Quality gates and thresholds | [View](agents/knowledge/cicd-quality-gates.md) |
-| AI Metrics | AI usage tracking and ROI | [View](agents/knowledge/ai-metrics.md) |
+| Topic | Link |
+|-------|------|
+| OpenSpec | [View](agents/knowledge/openspec.md) |
+| OpenSpec Commands | [View](agents/knowledge/openspec-commands.md) |
+| CLAUDE.md Best Practices | [View](agents/knowledge/claude-md-best-practices.md) |
+| Code Review | [View](agents/knowledge/code-review-guidelines.md) |
+| PR Templates | [View](agents/knowledge/pr-templates.md) |
+| Labels | [View](agents/knowledge/labels-conventions.md) |
+| CI/CD Gates | [View](agents/knowledge/cicd-quality-gates.md) |
+| AI Metrics | [View](agents/knowledge/ai-metrics.md) |
 
 ---
 
@@ -503,22 +457,20 @@ edp memory status          # Show memory status
 | Standard | Target | Why |
 |----------|--------|-----|
 | PR Size | < 400 lines | Large PRs get rubber-stamped |
-| Code Coverage | >= 80% (new code) | 100% is diminishing returns |
-| Review Response | < 4 hours | Slow reviews kill momentum |
-| Security Scan | No critical/high | Security is non-negotiable |
+| Coverage | >= 80% new code | 100% is diminishing returns |
+| Review | < 4 hours | Slow reviews kill momentum |
+| Security | No critical/high | Non-negotiable |
 
 ---
 
 ## Context Levels
 
-> AI usage should scale with your business context.
-
-| Level | Days | AI Usage | Description |
-|-------|------|----------|-------------|
-| **Onboarding** | 0-30 | Learning assistant | Use AI to explore and understand, not to ship |
-| **Ramping** | 30-60 | Pair programmer | AI helps with patterns, you validate |
-| **Contributing** | 60-90 | Accelerator | AI handles boilerplate, you focus on logic |
-| **Established** | 90+ | Force multiplier | AI amplifies your deep context |
+| Level | Days | AI Usage |
+|-------|------|----------|
+| **Onboarding** | 0-30 | Learning assistant — explore, don't ship |
+| **Ramping** | 30-60 | Pair programmer — AI helps, you validate |
+| **Contributing** | 60-90 | Accelerator — AI handles boilerplate |
+| **Established** | 90+ | Force multiplier — AI amplifies deep context |
 
 ---
 
@@ -526,78 +478,53 @@ edp memory status          # Show memory status
 
 ```
 your-project/
-├── agents/                      # AI agent prompts
+├── agents/                      # 10 AI agent prompts
 │   ├── backend.md
 │   ├── frontend.md
-│   ├── mobile.md
-│   ├── devops.md
-│   ├── backend-reviewer.md
-│   ├── frontend-reviewer.md
-│   ├── mobile-reviewer.md
-│   ├── devops-reviewer.md
-│   ├── consultant.md
-│   ├── ai-metrics.md
-│   └── knowledge/               # 13 knowledge bases
-│       ├── design-patterns.md
-│       ├── engineering-principles.md
-│       ├── testing-strategies.md
-│       └── ...
-├── .AGENT/                      # Cognitive memory system
+│   ├── ...
+│   └── knowledge/               # 14 knowledge bases
+├── .AGENT/                      # 5-type cognitive memory
 │   ├── working_memory/
 │   ├── procedural_memory/
 │   ├── semantic_memory/
 │   ├── episodic_memory/
 │   └── meta_memory/
-└── openspec/                    # Spec-driven development (OpenSpec)
+└── openspec/                    # Spec-driven development
     ├── specs/
     └── changes/
 ```
 
 ---
 
-## Resources
-
-> **[View All →](resources/)**
-
-| Category | Highlights |
-|----------|------------|
-| Newsletters | THE CODE, Every, JP |
-| Courses | Claude Code beginner to advanced |
-| GitHub | claude-code-cheat-sheet, awesome-mcp-servers |
-
----
-
 ## Changelog
+
+### 2.0.0
+- **`eng-play` CLI** replaces `edp` (backward compatible alias kept)
+- **Auto-detect agent** — `eng-play openspec start` scans codebase, no agent arg needed
+- **Structured prompt format** — Environment/Goal/State/Actions in `openspec/prompt.md`
+- **Lean CLAUDE.md** — ~30 lines (~600 tokens) following Boris Cherny's best practices
+- **CLAUDE.md Best Practices** knowledge base added
+- Agent switch generates lean CLAUDE.md (pointer) instead of full dump (10k+ tokens)
 
 ### 1.5.0
 - OpenSpec integration replaces SpecKit
-- `edp openspec start` for automated spec-driven workflow
-- OpenSpec knowledge base (`openspec.md`)
-- Updated all agents with OpenSpec auto-flow instructions
-- Complete README rewrite with richer documentation
+- Complete README rewrite
+- Updated all agents with OpenSpec auto-flow
 
 ### 1.4.0
 - `.AGENT/` AI Agent Memory Architecture (5 memory types)
-- `edp memory init` to initialize memory structure
-- `edp memory status` to check memory status
-- Working, Procedural, Semantic, Episodic, and Meta memory
-- Auto-install `.AGENT/` during `npx eng-delivery-playbook`
+- `edp memory init/status` commands
 
 ### 1.3.0
-- `edp speckit start` for automated full workflow
-- `edp speckit init` to initialize .specify directory
-- `edp speckit status` to check workflow status
+- Automated full workflow (specify > clarify > plan > tasks > implement)
 - Agent selection with shortcuts (be, fe, mob, ops)
 
 ### 1.2.0
-- `edp switch <agent>` command for easy agent switching
-- `edp list` to show all available agents
-- Short aliases (`be`, `fe`, `mob`, `ops`, `be-review`, etc.)
+- `edp switch <agent>` and `edp list`
+- Short aliases
 
 ### 1.1.0
-- Interactive installer with agent selection
-- Auto-configure `CLAUDE.md` and `.cursorrules`
-- GitHub Packages support
+- Interactive installer, auto-configure CLAUDE.md/.cursorrules
 
 ### 1.0.0
 - Initial release — 10 agents, 13 knowledge bases
@@ -606,17 +533,16 @@ your-project/
 
 ## Contributing
 
-1. Fork → 2. Branch → 3. Follow structure → 4. PR
+1. Fork > 2. Branch > 3. Follow structure > 4. PR
 
 ---
 
 ## License
 
-MIT — Use and adapt freely.
+MIT
 
 ---
 
 <p align="center">
-  <strong>AI is a tool, not a replacement for understanding.</strong><br>
-  <sub>Built with agents, memory, and specs in mind.</sub>
+  <strong>AI is a tool, not a replacement for understanding.</strong>
 </p>

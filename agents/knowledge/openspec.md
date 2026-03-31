@@ -181,13 +181,13 @@ The Engineering Delivery Playbook integrates OpenSpec with agent switching:
 
 ```bash
 # Full automated workflow
-edp openspec start "user authentication with OAuth" be
+eng-play openspec start "user authentication with OAuth" be
 
 # Manual workflow
-edp switch backend           # Switch to Backend agent
+eng-play switch backend           # Switch to Backend agent
 /opsx:propose "feature"      # Create proposal
 /opsx:apply                  # Implement
-edp switch be-review         # Switch to Reviewer
+eng-play switch be-review         # Switch to Reviewer
 # Review the implementation
 /opsx:archive                # Archive when done
 ```

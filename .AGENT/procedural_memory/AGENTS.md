@@ -26,8 +26,8 @@
 ## Switching Agents
 
 ```bash
-edp switch <agent>    # Full name
-edp switch <alias>    # Short alias
+eng-play switch <agent>    # Full name
+eng-play switch <alias>    # Short alias
 ```
 
 Switching updates both `CLAUDE.md` and `.cursorrules` automatically.

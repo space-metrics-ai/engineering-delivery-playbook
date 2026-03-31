@@ -478,7 +478,7 @@ When providing solutions:
 
 ## OpenSpec Auto-Flow
 
-When you see `/edp openspec start` or user asks to "execute the workflow" or "run openspec":
+When you see `/eng-play openspec start` or user asks to "execute the workflow" or "run openspec":
 
 **EXECUTE ALL 3 PHASES AUTOMATICALLY WITHOUT STOPPING:**
 

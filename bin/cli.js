@@ -74,6 +74,47 @@ function resolveAgent(name) {
   return null;
 }
 
+function generateLeanClaudeMd(agent, agentPath) {
+  const cwd = process.cwd();
+  const projectName = path.basename(cwd);
+  const hasMemory = fs.existsSync(path.join(cwd, AGENT_MEMORY_DIR));
+  const hasOpenSpec = fs.existsSync(path.join(cwd, OPENSPEC_DIR));
+
+  return `# CLAUDE.md
+
+## Context
+${projectName} — Active agent: ${agent.name}.
+Full agent rules: agents/${agent.file}
+Knowledge base: agents/knowledge/
+
+## Agent
+Read and follow agents/${agent.file} for all guidelines, patterns, and behavior rules.
+Reference agents/knowledge/ for design patterns, testing, and engineering principles.
+
+## Standards
+- Follow conventions in agents/${agent.file}
+- PR size < 400 lines
+- Code coverage >= 80% (new code)
+- Conventional comments: blocker: | issue: | suggestion: | nit:
+${hasOpenSpec ? '- Use OpenSpec for spec-driven development (/opsx:propose, /opsx:apply)' : ''}
+${hasMemory ? `
+## Memory
+Read .AGENT/ for persistent context:
+- .AGENT/semantic_memory/project/ for architecture and conventions
+- .AGENT/semantic_memory/entities/ for team and services
+- .AGENT/procedural_memory/skills/ for reusable workflows` : ''}
+
+## Out of Scope
+- Don't modify CI/CD pipelines without asking
+- Don't commit directly to main
+- Don't make product decisions — focus on code
+
+## Learnings
+<!-- Add learnings from PRs and code reviews here -->
+<!-- Format: - [YYYY-MM-DD] Learning description -->
+`;
+}
+
 function switchAgent(agentKey) {
   const agent = resolveAgent(agentKey);
 
@@ -98,17 +139,18 @@ function switchAgent(agentKey) {
     process.exit(1);
   }
 
+  // Generate lean CLAUDE.md (~30 lines, ~600 tokens) instead of dumping full agent (~500 lines)
+  const leanContent = generateLeanClaudeMd(agent, agentPath);
+  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), leanContent);
+
+  // .cursorrules gets the full agent content (Cursor uses it differently)
   const agentContent = fs.readFileSync(agentPath, 'utf-8');
-
-  // Update CLAUDE.md
-  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), agentContent);
-
-  // Update .cursorrules
   fs.writeFileSync(path.join(cwd, '.cursorrules'), agentContent);
 
   console.log('\n  Switched to: ' + agent.name);
-  console.log('  ✓ Updated CLAUDE.md');
-  console.log('  ✓ Updated .cursorrules\n');
+  console.log('  ✓ Updated CLAUDE.md (lean ~600 tokens)');
+  console.log('  ✓ Updated .cursorrules (full agent)');
+  console.log('  Tip: Claude reads agents/' + agent.file + ' on demand\n');
 }
 
 function listAgents() {
@@ -126,7 +168,7 @@ function listAgents() {
   console.log('    devops-reviewer    DevOps Reviewer (ops-review)');
   console.log('\n  Specialists:');
   console.log('    consultant       Tech Consultant (consult)');
-  console.log('\n  Usage: edp switch <agent>\n');
+  console.log('\n  Usage: eng-play switch <agent>\n');
 }
 
 async function selectAgent() {
@@ -159,11 +201,14 @@ function configureAgent(agent, agentsDir) {
   const agentContent = fs.readFileSync(agentPath, 'utf-8');
   const cwd = process.cwd();
 
-  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), agentContent);
-  console.log(`  ✓ Created CLAUDE.md (Claude Code)`);
+  // Lean CLAUDE.md for Claude Code (~600 tokens)
+  const leanContent = generateLeanClaudeMd(agent, agentPath);
+  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), leanContent);
+  console.log(`  ✓ Created CLAUDE.md (lean ~600 tokens)`);
 
+  // Full content for Cursor
   fs.writeFileSync(path.join(cwd, '.cursorrules'), agentContent);
-  console.log(`  ✓ Created .cursorrules (Cursor)`);
+  console.log(`  ✓ Created .cursorrules (full agent)`);
 }
 
 function installMemory() {
@@ -177,7 +222,7 @@ function installMemory() {
   }
 
   if (fs.existsSync(targetDir)) {
-    console.log('  .AGENT/ directory already exists. Skipping (use "edp memory init --force" to reset).');
+    console.log('  .AGENT/ directory already exists. Skipping (use "eng-play memory init --force" to reset).');
     return true;
   }
 
@@ -192,7 +237,7 @@ function memoryInit(force) {
 
   if (fs.existsSync(targetDir) && !force) {
     console.log('\n  .AGENT/ directory already exists.');
-    console.log('  Use "edp memory init --force" to reset.\n');
+    console.log('  Use "eng-play memory init --force" to reset.\n');
     return;
   }
 
@@ -238,7 +283,7 @@ function memoryStatus() {
 
   if (!fs.existsSync(agentDir)) {
     console.log('\n  No .AGENT/ directory found.');
-    console.log('  Run "edp memory init" to initialize.\n');
+    console.log('  Run "eng-play memory init" to initialize.\n');
     return;
   }
 
@@ -285,10 +330,10 @@ function handleMemory(args) {
     console.log('\n  EDP Memory Commands\n');
     console.log('  Usage:');
     console.log('  ──────');
-    console.log('  edp memory init            Initialize .AGENT/ memory architecture');
-    console.log('  edp memory init --force    Reset .AGENT/ to defaults');
-    console.log('  edp memory status          Show memory status');
-    console.log('  edp memory help            Show this help\n');
+    console.log('  eng-play memory init            Initialize .AGENT/ memory architecture');
+    console.log('  eng-play memory init --force    Reset .AGENT/ to defaults');
+    console.log('  eng-play memory status          Show memory status');
+    console.log('  eng-play memory help            Show this help\n');
   } else if (subCommand === 'init') {
     const force = args.includes('--force');
     memoryInit(force);
@@ -335,10 +380,10 @@ async function install() {
     console.log('\n  Done!\n');
     console.log('  Quick start:');
     console.log('  ────────────');
-    console.log('  edp switch backend      # Switch to Backend Engineer');
-    console.log('  edp switch be-review    # Switch to Backend Reviewer');
-    console.log('  edp list                # Show all agents');
-    console.log('  edp memory status       # Check memory architecture\n');
+    console.log('  eng-play switch backend      # Switch to Backend Engineer');
+    console.log('  eng-play switch be-review    # Switch to Backend Reviewer');
+    console.log('  eng-play list                # Show all agents');
+    console.log('  eng-play memory status       # Check memory architecture\n');
     console.log('  Docs: https://github.com/space-metrics-ai/engineering-delivery-playbook\n');
   } catch (error) {
     console.error('  Error:', error.message);
@@ -347,29 +392,25 @@ async function install() {
 }
 
 function showOpenspecHelp() {
-  console.log('\n  EDP OpenSpec Commands\n');
+  console.log('\n  OpenSpec Commands\n');
   console.log('  Usage:');
   console.log('  ──────');
-  console.log('  edp openspec start <feature> <agent>   Start full workflow');
-  console.log('  edp openspec init                      Initialize openspec directory');
-  console.log('  edp openspec status                    Show current workflow status');
-  console.log('  edp openspec help                      Show this help\n');
-  console.log('  Agent shortcuts:');
-  console.log('  ────────────────');
+  console.log('  eng-play openspec start "<feature>"         Start full workflow (auto-detect agent)');
+  console.log('  eng-play openspec start "<feature>" <agent> Start with specific agent');
+  console.log('  eng-play openspec init                      Initialize openspec directory');
+  console.log('  eng-play openspec status                    Show current workflow status');
+  console.log('  eng-play openspec help                      Show this help\n');
+  console.log('  Agent shortcuts (optional):');
+  console.log('  ───────────────────────────');
   console.log('  be       Backend Engineer');
   console.log('  fe       Frontend Engineer');
   console.log('  mob      Mobile Engineer');
   console.log('  ops      DevOps Engineer\n');
   console.log('  Examples:');
   console.log('  ─────────');
-  console.log('  edp openspec start "user auth" be');
-  console.log('  edp openspec start "dashboard" fe');
-  console.log('  edp openspec init\n');
-  console.log('  Full workflow runs:');
-  console.log('  ───────────────────');
-  console.log('  1. Switch to agent');
-  console.log('  2. /opsx:propose (create specs, design, tasks)');
-  console.log('  3. /opsx:apply (implement)\n');
+  console.log('  eng-play openspec start "user authentication with OAuth"');
+  console.log('  eng-play openspec start "responsive dashboard" fe');
+  console.log('  eng-play openspec init\n');
 }
 
 function openspecInit() {
@@ -391,7 +432,7 @@ function openspecInit() {
   console.log('\n  Created openspec/ directory structure:');
   console.log('  ├── specs/      Living specifications');
   console.log('  └── changes/    Change proposals\n');
-  console.log('  Next: Use /opsx:propose "<feature>" or edp openspec start "<feature>" <agent>\n');
+  console.log('  Next: Use /opsx:propose "<feature>" or eng-play openspec start "<feature>" <agent>\n');
   console.log('  Tip: Install OpenSpec globally for full power:');
   console.log('  npm install -g @fission-ai/openspec@latest\n');
 }
@@ -402,7 +443,7 @@ function openspecStatus() {
 
   if (!fs.existsSync(openspecDir)) {
     console.log('\n  No openspec/ directory found.');
-    console.log('  Run "edp openspec init" or "openspec init" to initialize.\n');
+    console.log('  Run "eng-play openspec init" or "openspec init" to initialize.\n');
     return;
   }
 
@@ -424,30 +465,118 @@ function openspecStatus() {
   console.log('');
 }
 
+function detectAgent() {
+  const cwd = process.cwd();
+  const indicators = {
+    backend: [
+      'pom.xml', 'build.gradle', 'go.mod', 'Gemfile', 'requirements.txt',
+      'Pipfile', 'setup.py', 'pyproject.toml', 'Cargo.toml',
+    ],
+    frontend: [
+      'next.config.js', 'next.config.ts', 'nuxt.config.ts', 'vite.config.ts',
+      'vue.config.js', 'angular.json', 'svelte.config.js',
+    ],
+    mobile: [
+      'pubspec.yaml', 'Podfile', 'build.gradle.kts',
+      'AndroidManifest.xml', 'Info.plist',
+    ],
+    devops: [
+      'Dockerfile', 'docker-compose.yml', 'terraform.tf', 'main.tf',
+      'Jenkinsfile', 'ansible.cfg', '.github/workflows',
+    ],
+  };
+
+  const scores = { backend: 0, frontend: 0, mobile: 0, devops: 0 };
+
+  // Check package.json for frontend clues
+  const pkgPath = path.join(cwd, 'package.json');
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
+      const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
+      const feFrameworks = ['react', 'vue', 'next', 'nuxt', 'angular', 'svelte', '@angular/core'];
+      const beFrameworks = ['express', 'fastify', 'koa', 'nestjs', '@nestjs/core', 'hapi'];
+      if (deps.some(d => feFrameworks.includes(d))) scores.frontend += 3;
+      if (deps.some(d => beFrameworks.includes(d))) scores.backend += 3;
+    } catch (e) { /* ignore */ }
+  }
+
+  // Check file indicators
+  for (const [agent, files] of Object.entries(indicators)) {
+    for (const file of files) {
+      if (fs.existsSync(path.join(cwd, file))) {
+        scores[agent] += 2;
+      }
+    }
+  }
+
+  // Check src/ directory patterns
+  const srcPatterns = {
+    frontend: ['src/components', 'src/pages', 'src/app', 'app/page.tsx', 'app/layout.tsx'],
+    backend: ['src/main', 'src/controllers', 'src/routes', 'src/services', 'cmd/', 'internal/'],
+    mobile: ['lib/', 'ios/', 'android/'],
+  };
+
+  for (const [agent, dirs] of Object.entries(srcPatterns)) {
+    for (const dir of dirs) {
+      if (fs.existsSync(path.join(cwd, dir))) {
+        scores[agent] += 1;
+      }
+    }
+  }
+
+  // Return the agent with highest score, default to backend
+  const best = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+  return best[1] > 0 ? best[0] : 'backend';
+}
+
+function getEnvironmentContext() {
+  const cwd = process.cwd();
+  const context = {
+    project: path.basename(cwd),
+    hasGit: fs.existsSync(path.join(cwd, '.git')),
+    hasTests: false,
+    hasCI: false,
+    hasOpenSpec: fs.existsSync(path.join(cwd, OPENSPEC_DIR)),
+    hasMemory: fs.existsSync(path.join(cwd, AGENT_MEMORY_DIR)),
+  };
+
+  // Detect test setup
+  const testDirs = ['test', 'tests', '__tests__', 'spec', 'src/test'];
+  context.hasTests = testDirs.some(d => fs.existsSync(path.join(cwd, d)));
+
+  // Detect CI
+  const ciPaths = ['.github/workflows', '.gitlab-ci.yml', 'Jenkinsfile', '.circleci'];
+  context.hasCI = ciPaths.some(d => fs.existsSync(path.join(cwd, d)));
+
+  return context;
+}
+
 function openspecStart(feature, agentKey) {
   if (!feature) {
     console.log('\n  Error: Missing feature description.');
-    console.log('  Usage: edp openspec start "<feature>" <agent>\n');
+    console.log('  Usage: eng-play openspec start "<feature>" [agent]\n');
     process.exit(1);
   }
 
-  if (!agentKey) {
-    console.log('\n  Error: Missing agent type.');
-    console.log('  Available: be, fe, mob, ops\n');
-    process.exit(1);
-  }
-
-  // Resolve and switch agent
-  const agent = resolveAgent(agentKey);
-  if (!agent) {
-    console.log('\n  Unknown agent: ' + agentKey);
-    console.log('  Available: be (backend), fe (frontend), mob (mobile), ops (devops)\n');
-    process.exit(1);
+  // Auto-detect or resolve agent
+  let detectedAgent = null;
+  if (agentKey) {
+    detectedAgent = resolveAgent(agentKey);
+    if (!detectedAgent) {
+      console.log('\n  Unknown agent: ' + agentKey);
+      console.log('  Available: be (backend), fe (frontend), mob (mobile), ops (devops)\n');
+      process.exit(1);
+    }
+  } else {
+    const detected = detectAgent();
+    detectedAgent = { key: detected, ...AGENTS[detected] };
+    console.log('\n  Auto-detected agent: ' + detectedAgent.name);
   }
 
   const cwd = process.cwd();
   const agentsDir = path.join(cwd, AGENTS_DIR);
-  const agentPath = path.join(agentsDir, agent.file);
+  const agentPath = path.join(agentsDir, detectedAgent.file);
 
   if (!fs.existsSync(agentPath)) {
     console.log('\n  Agent file not found. Run "npx eng-delivery-playbook" first.\n');
@@ -460,45 +589,67 @@ function openspecStart(feature, agentKey) {
     openspecInit();
   }
 
-  // Switch agent
+  // Switch agent — lean CLAUDE.md, full .cursorrules
+  const leanContent = generateLeanClaudeMd(detectedAgent, agentPath);
+  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), leanContent);
   const agentContent = fs.readFileSync(agentPath, 'utf-8');
-  fs.writeFileSync(path.join(cwd, 'CLAUDE.md'), agentContent);
   fs.writeFileSync(path.join(cwd, '.cursorrules'), agentContent);
 
-  // Create prompt file for the AI
+  // Gather environment context
+  const env = getEnvironmentContext();
+
+  // Create structured prompt
   const promptContent = `# OpenSpec Auto-Flow
 
-## Feature
+## Environment
+- **Project**: ${env.project}
+- **Agent**: ${detectedAgent.name}
+- **Git**: ${env.hasGit ? 'yes' : 'no'}
+- **Tests**: ${env.hasTests ? 'yes' : 'setup needed'}
+- **CI/CD**: ${env.hasCI ? 'yes' : 'not detected'}
+- **Memory**: ${env.hasMemory ? '.AGENT/ active' : 'not initialized'}
+
+## Goal
 ${feature}
 
-## Agent
-${agent.name}
+## State
+- Agent: ${detectedAgent.name} (switched)
+- OpenSpec: ${env.hasOpenSpec ? 'initialized' : 'ready'}
+- CLAUDE.md: updated
+- .cursorrules: updated
 
-## Instructions
-Execute the full OpenSpec workflow automatically:
+## Actions
+Execute the full workflow automatically — NO confirmations, NO pauses:
 
-1. [x] Agent switched to ${agent.name}
-2. [ ] Run /opsx:propose with the feature above
-3. [ ] Run /opsx:apply to implement
+1. **/opsx:propose** — Generate proposal, specs, design, and tasks for the goal above
+2. **/opsx:apply** — Implement all tasks from the proposal
+3. ${env.hasTests ? '**/opsx:verify** — Validate implementation against specs' : '**Write tests** — Create test coverage for the implementation'}
 
-**IMPORTANT**: Execute all steps sequentially WITHOUT asking for confirmation between them.
-Show progress: [1/3], [2/3], [3/3].
+## Rules
+- Execute ALL actions sequentially without stopping
+- Make reasonable decisions instead of asking
+- Show progress: [1/3], [2/3], [3/3]
+- ONLY stop on fatal errors
+- When in doubt: KEEP GOING
 `;
 
   const promptPath = path.join(openspecDir, 'prompt.md');
   fs.writeFileSync(promptPath, promptContent);
 
-  console.log('\n  OpenSpec workflow initialized!\n');
-  console.log('  Agent: ' + agent.name);
   console.log('  Feature: ' + feature);
+  console.log('\n  Environment:');
+  console.log('  ────────────');
+  console.log('  Project:  ' + env.project);
+  console.log('  Agent:    ' + detectedAgent.name + (agentKey ? '' : ' (auto-detected)'));
+  console.log('  Git:      ' + (env.hasGit ? '✓' : '✗'));
+  console.log('  Tests:    ' + (env.hasTests ? '✓' : '✗ setup needed'));
+  console.log('  CI/CD:    ' + (env.hasCI ? '✓' : '✗'));
+  console.log('  Memory:   ' + (env.hasMemory ? '✓' : '✗'));
   console.log('\n  ✓ Created openspec/prompt.md');
-  console.log('  ✓ Switched CLAUDE.md');
-  console.log('  ✓ Switched .cursorrules\n');
-  console.log('  Now tell Claude/Cursor:');
-  console.log('  ──────────────────────────');
+  console.log('  ✓ Switched CLAUDE.md & .cursorrules\n');
+  console.log('  Now tell your AI agent:');
+  console.log('  ───────────────────────');
   console.log('  "Read openspec/prompt.md and execute the full workflow"\n');
-  console.log('  Or use the slash command:');
-  console.log('  /opsx:propose "' + feature + '"\n');
 }
 
 function handleOpenspec(args) {
@@ -511,9 +662,22 @@ function handleOpenspec(args) {
   } else if (subCommand === 'status') {
     openspecStatus();
   } else if (subCommand === 'start') {
-    const feature = args[1];
-    const agentKey = args[2];
-    openspecStart(feature, agentKey);
+    // Collect all remaining args — feature might be unquoted words, last arg might be agent
+    const remaining = args.slice(1);
+    if (remaining.length === 0) {
+      openspecStart(null, null);
+    } else {
+      // Check if last arg is an agent alias
+      const lastArg = remaining[remaining.length - 1];
+      const possibleAgent = resolveAgent(lastArg);
+      if (possibleAgent && remaining.length > 1) {
+        const feature = remaining.slice(0, -1).join(' ');
+        openspecStart(feature, lastArg);
+      } else {
+        const feature = remaining.join(' ');
+        openspecStart(feature, null);
+      }
+    }
   } else {
     console.log('\n  Unknown openspec command: ' + subCommand);
     showOpenspecHelp();
@@ -524,19 +688,19 @@ function showHelp() {
   console.log('\n  Engineering Delivery Playbook\n');
   console.log('  Usage:');
   console.log('  ──────');
-  console.log('  edp                    Install agents (interactive)');
-  console.log('  edp install            Install agents (interactive)');
-  console.log('  edp switch <agent>     Switch to a different agent');
-  console.log('  edp list               List all available agents');
-  console.log('  edp openspec <cmd>     OpenSpec workflow commands');
-  console.log('  edp memory <cmd>       Memory architecture commands');
-  console.log('  edp help               Show this help\n');
+  console.log('  eng-play                    Install agents (interactive)');
+  console.log('  eng-play install            Install agents (interactive)');
+  console.log('  eng-play switch <agent>     Switch to a different agent');
+  console.log('  eng-play list               List all available agents');
+  console.log('  eng-play openspec <cmd>     OpenSpec workflow commands');
+  console.log('  eng-play memory <cmd>       Memory architecture commands');
+  console.log('  eng-play help               Show this help\n');
   console.log('  Examples:');
   console.log('  ─────────');
-  console.log('  edp switch backend');
-  console.log('  edp switch frontend-reviewer');
-  console.log('  edp openspec start "feature" be');
-  console.log('  edp memory init\n');
+  console.log('  eng-play switch backend');
+  console.log('  eng-play switch frontend-reviewer');
+  console.log('  eng-play openspec start "feature" be');
+  console.log('  eng-play memory init\n');
 }
 
 async function main() {
@@ -548,8 +712,8 @@ async function main() {
   } else if (command === 'switch') {
     const agentKey = args[1];
     if (!agentKey) {
-      console.log('\n  Usage: edp switch <agent>');
-      console.log('  Run "edp list" to see available agents.\n');
+      console.log('\n  Usage: eng-play switch <agent>');
+      console.log('  Run "eng-play list" to see available agents.\n');
       process.exit(1);
     }
     switchAgent(agentKey);

@@ -1,4 +1,4 @@
-# EDP OpenSpec Commands
+# OpenSpec Commands
 
 Custom commands for automated spec-driven development workflow using OpenSpec.
 
@@ -6,7 +6,7 @@ Custom commands for automated spec-driven development workflow using OpenSpec.
 
 ## CRITICAL: Auto-Execution Rules
 
-When you see `/edp openspec start` OR when user says "execute the workflow" OR when `openspec/prompt.md` exists:
+When you see `/eng-play openspec start` OR when user says "execute the workflow" OR when `openspec/prompt.md` exists:
 
 **YOU MUST EXECUTE ALL PHASES AUTOMATICALLY WITHOUT STOPPING.**
 
@@ -20,20 +20,20 @@ When you see `/edp openspec start` OR when user says "execute the workflow" OR w
 
 ---
 
-## /edp openspec start
+## /eng-play openspec start
 
 Starts the full OpenSpec workflow automatically.
 
 **Syntax:**
 ```
-/edp openspec start "<feature-description>" <agent>
+/eng-play openspec start "<feature-description>" <agent>
 ```
 
 **Agents:** `be` (backend), `fe` (frontend), `mob` (mobile), `ops` (devops)
 
 **Example:**
 ```
-/edp openspec start "user authentication with OAuth" be
+/eng-play openspec start "user authentication with OAuth" be
 ```
 
 ---
@@ -78,4 +78,4 @@ When in doubt: **KEEP GOING. DO NOT STOP.**
 - `/opsx:verify` - Validate implementation against specs
 - `/opsx:archive` - Archive completed changes
 - `/opsx:continue` - Resume in-progress work
-- `edp openspec status` - Show workflow status
+- `eng-play openspec status` - Show workflow status
