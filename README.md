@@ -87,17 +87,6 @@ That's it. The CLI auto-detects the best agent, generates a structured prompt, a
 
 ## Development Flow
 
-<p align="center">
-  <img src="context-vs-onboarding.png" alt="Context vs Onboarding" width="600">
-</p>
-
-```
-Traditional:  Vague idea → Code → Issues → Rewrite → Tech debt
-Spec-driven:  Clear spec → AI understands → Correct code → Ship
-```
-
-### The Flow
-
 ```
 PROPOSE ──▶ DESIGN ──▶ TASKS ──▶ IMPLEMENT ──▶ REVIEW ──▶ SHIP
    │           │          │          │             │          │
