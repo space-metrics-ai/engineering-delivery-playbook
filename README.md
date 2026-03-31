@@ -64,11 +64,12 @@ curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delive
 ```
 </details>
 
-### 2. Install OpenSpec
+### 2. (Optional) Install OpenSpec CLI
+
+The `openspec/` directory is created automatically. For full CLI power:
 
 ```bash
 npm install -g @fission-ai/openspec@latest
-openspec init
 ```
 
 ### 3. Start building
@@ -114,7 +115,7 @@ The agent runs `/opsx:propose` then `/opsx:apply` automatically.
 ### 3. Review
 
 ```bash
-eng-play switch be-review
+eng-play switch reviewer
 ```
 ```
 "Review my implementation for security, error handling, and test coverage"
@@ -504,6 +505,9 @@ your-project/
 ---
 
 ## Changelog
+
+### 2.1.1
+- **OpenSpec auto-install** — `npx eng-delivery-playbook` now creates `openspec/` directory automatically during initial setup
 
 ### 2.1.0
 - **15 technology-specific agents** replace 4 generic ones

@@ -426,8 +426,8 @@ async function install() {
     console.log('\n  Done!\n');
     console.log('  Quick start:');
     console.log('  ────────────');
-    console.log('  eng-play switch backend      # Switch to Backend Engineer');
-    console.log('  eng-play switch be-review    # Switch to Backend Reviewer');
+    console.log('  eng-play switch java         # Switch to Java Engineer');
+    console.log('  eng-play switch reviewer     # Switch to Code Reviewer');
     console.log('  eng-play list                # Show all agents');
     console.log('  eng-play memory status       # Check memory architecture\n');
     console.log('  Docs: https://github.com/space-metrics-ai/engineering-delivery-playbook\n');
