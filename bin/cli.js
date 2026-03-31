@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
+const { execSync } = require('child_process');
 
 const AGENTS_DIR = 'agents';
 const AGENT_MEMORY_DIR = '.AGENT';
@@ -260,18 +261,32 @@ function installOpenspec() {
   const cwd = process.cwd();
   const openspecDir = path.join(cwd, OPENSPEC_DIR);
 
-  if (fs.existsSync(openspecDir)) {
+  // Create openspec/ directory
+  if (!fs.existsSync(openspecDir)) {
+    const dirs = ['specs', 'changes'];
+    fs.mkdirSync(openspecDir, { recursive: true });
+    dirs.forEach(dir => {
+      fs.mkdirSync(path.join(openspecDir, dir), { recursive: true });
+    });
+    console.log('  ✓ Installed openspec/ directory');
+  } else {
     console.log('  openspec/ directory already exists. Skipping.');
-    return;
   }
 
-  const dirs = ['specs', 'changes'];
-  fs.mkdirSync(openspecDir, { recursive: true });
-  dirs.forEach(dir => {
-    fs.mkdirSync(path.join(openspecDir, dir), { recursive: true });
-  });
-
-  console.log('  ✓ Installed openspec/ directory\n');
+  // Install OpenSpec CLI globally
+  try {
+    execSync('openspec --version', { stdio: 'ignore' });
+    console.log('  ✓ OpenSpec CLI already installed');
+  } catch {
+    console.log('  Installing OpenSpec CLI...');
+    try {
+      execSync('npm install -g @fission-ai/openspec@latest', { stdio: 'inherit' });
+      console.log('  ✓ Installed OpenSpec CLI\n');
+    } catch (e) {
+      console.log('  ⚠ Could not install OpenSpec CLI globally. Try manually:');
+      console.log('    npm install -g @fission-ai/openspec@latest\n');
+    }
+  }
 }
 
 function memoryInit(force) {
