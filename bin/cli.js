@@ -425,16 +425,13 @@ function showOpenspecHelp() {
   console.log('  eng-play openspec init                      Initialize openspec directory');
   console.log('  eng-play openspec status                    Show current workflow status');
   console.log('  eng-play openspec help                      Show this help\n');
-  console.log('  Agent shortcuts (optional):');
-  console.log('  ───────────────────────────');
-  console.log('  be       Backend Engineer');
-  console.log('  fe       Frontend Engineer');
-  console.log('  mob      Mobile Engineer');
-  console.log('  ops      DevOps Engineer\n');
+  console.log('  Agent shortcuts (optional — auto-detected if omitted):');
+  console.log('  ──────────────────────────────────────────────────────');
+  console.log('  java, kt, go, py, rs, ts, react, vue, android, ios, flutter, ops\n');
   console.log('  Examples:');
   console.log('  ─────────');
   console.log('  eng-play openspec start "user authentication with OAuth"');
-  console.log('  eng-play openspec start "responsive dashboard" fe');
+  console.log('  eng-play openspec start "responsive dashboard" react');
   console.log('  eng-play openspec init\n');
 }
 
