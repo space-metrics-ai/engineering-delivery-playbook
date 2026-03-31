@@ -50,23 +50,23 @@ echo "Files:"
 find "$TARGET_DIR/agents" -name "*.md" -type f | head -20
 echo ""
 
-# Check if spec-kit is available
-if command -v specify &> /dev/null; then
-  read -p "Initialize spec-kit? (Y/n) " -n 1 -r
+# Check if OpenSpec is available
+if command -v openspec &> /dev/null; then
+  read -p "Initialize OpenSpec? (Y/n) " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-    specify init . --here --ai claude
+    openspec init
     echo ""
-    echo "Spec-kit initialized!"
+    echo "OpenSpec initialized!"
   fi
 else
-  echo "Tip: Install spec-kit for spec-driven development:"
-  echo "  uv tool install specify-cli --from git+https://github.com/github/spec-kit.git"
+  echo "Tip: Install OpenSpec for spec-driven development:"
+  echo "  npm install -g @fission-ai/openspec@latest"
 fi
 
 echo ""
 echo "Next steps:"
 echo "  1. Configure your AI tool with an agent prompt"
-echo "  2. Start with: /speckit.specify \"your feature\""
+echo "  2. Start with: /opsx:propose \"your feature\""
 echo ""
 echo "Docs: https://github.com/$REPO"

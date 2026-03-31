@@ -6,7 +6,7 @@ const readline = require('readline');
 
 const AGENTS_DIR = 'agents';
 const AGENT_MEMORY_DIR = '.AGENT';
-const SPECIFY_DIR = '.specify';
+const OPENSPEC_DIR = 'openspec';
 
 const AGENTS = {
   // Engineers
@@ -346,14 +346,14 @@ async function install() {
   }
 }
 
-function showSpeckitHelp() {
-  console.log('\n  EDP SpecKit Commands\n');
+function showOpenspecHelp() {
+  console.log('\n  EDP OpenSpec Commands\n');
   console.log('  Usage:');
   console.log('  ──────');
-  console.log('  edp speckit start <feature> <agent>   Start full workflow');
-  console.log('  edp speckit init                      Initialize .specify directory');
-  console.log('  edp speckit status                    Show current workflow status');
-  console.log('  edp speckit help                      Show this help\n');
+  console.log('  edp openspec start <feature> <agent>   Start full workflow');
+  console.log('  edp openspec init                      Initialize openspec directory');
+  console.log('  edp openspec status                    Show current workflow status');
+  console.log('  edp openspec help                      Show this help\n');
   console.log('  Agent shortcuts:');
   console.log('  ────────────────');
   console.log('  be       Backend Engineer');
@@ -362,69 +362,72 @@ function showSpeckitHelp() {
   console.log('  ops      DevOps Engineer\n');
   console.log('  Examples:');
   console.log('  ─────────');
-  console.log('  edp speckit start "user auth" be');
-  console.log('  edp speckit start "dashboard" fe');
-  console.log('  edp speckit init\n');
-  console.log('  Full workflow (/edp speckit start) runs:');
-  console.log('  ──────────────────────────────────────────');
+  console.log('  edp openspec start "user auth" be');
+  console.log('  edp openspec start "dashboard" fe');
+  console.log('  edp openspec init\n');
+  console.log('  Full workflow runs:');
+  console.log('  ───────────────────');
   console.log('  1. Switch to agent');
-  console.log('  2. /speckit.specify');
-  console.log('  3. /speckit.clarify');
-  console.log('  4. /speckit.plan');
-  console.log('  5. /speckit.tasks');
-  console.log('  6. /speckit.implement\n');
+  console.log('  2. /opsx:propose (create specs, design, tasks)');
+  console.log('  3. /opsx:apply (implement)\n');
 }
 
-function speckitInit() {
+function openspecInit() {
   const cwd = process.cwd();
-  const specifyDir = path.join(cwd, SPECIFY_DIR);
+  const openspecDir = path.join(cwd, OPENSPEC_DIR);
 
-  if (fs.existsSync(specifyDir)) {
-    console.log('\n  .specify directory already exists.\n');
+  if (fs.existsSync(openspecDir)) {
+    console.log('\n  openspec/ directory already exists.\n');
     return;
   }
 
   // Create directory structure
-  const dirs = ['memory', 'scripts', 'specs', 'templates'];
-  fs.mkdirSync(specifyDir, { recursive: true });
+  const dirs = ['specs', 'changes'];
+  fs.mkdirSync(openspecDir, { recursive: true });
   dirs.forEach(dir => {
-    fs.mkdirSync(path.join(specifyDir, dir), { recursive: true });
+    fs.mkdirSync(path.join(openspecDir, dir), { recursive: true });
   });
 
-  console.log('\n  Created .specify/ directory structure:');
-  console.log('  ├── memory/');
-  console.log('  ├── scripts/');
-  console.log('  ├── specs/');
-  console.log('  └── templates/\n');
-  console.log('  Next: Use /edp speckit start "<feature>" <agent>\n');
+  console.log('\n  Created openspec/ directory structure:');
+  console.log('  ├── specs/      Living specifications');
+  console.log('  └── changes/    Change proposals\n');
+  console.log('  Next: Use /opsx:propose "<feature>" or edp openspec start "<feature>" <agent>\n');
+  console.log('  Tip: Install OpenSpec globally for full power:');
+  console.log('  npm install -g @fission-ai/openspec@latest\n');
 }
 
-function speckitStatus() {
+function openspecStatus() {
   const cwd = process.cwd();
-  const specifyDir = path.join(cwd, SPECIFY_DIR);
+  const openspecDir = path.join(cwd, OPENSPEC_DIR);
 
-  if (!fs.existsSync(specifyDir)) {
-    console.log('\n  No .specify directory found.');
-    console.log('  Run "edp speckit init" to initialize.\n');
+  if (!fs.existsSync(openspecDir)) {
+    console.log('\n  No openspec/ directory found.');
+    console.log('  Run "edp openspec init" or "openspec init" to initialize.\n');
     return;
   }
 
-  const specsDir = path.join(specifyDir, 'specs');
-  const specs = fs.existsSync(specsDir) ? fs.readdirSync(specsDir).filter(f => f.endsWith('.md')) : [];
+  const specsDir = path.join(openspecDir, 'specs');
+  const changesDir = path.join(openspecDir, 'changes');
+  const specs = fs.existsSync(specsDir) ? fs.readdirSync(specsDir).filter(f => !f.startsWith('.')) : [];
+  const changes = fs.existsSync(changesDir) ? fs.readdirSync(changesDir).filter(f => !f.startsWith('.')) : [];
 
-  console.log('\n  SpecKit Status\n');
-  console.log('  .specify/ directory: ✓ exists');
-  console.log(`  Specs found: ${specs.length}`);
+  console.log('\n  OpenSpec Status\n');
+  console.log('  openspec/ directory: ✓ exists');
+  console.log(`  Specs: ${specs.length}`);
   if (specs.length > 0) {
     specs.forEach(spec => console.log(`    - ${spec}`));
+  }
+  console.log(`  Changes: ${changes.length}`);
+  if (changes.length > 0) {
+    changes.forEach(change => console.log(`    - ${change}`));
   }
   console.log('');
 }
 
-function speckitStart(feature, agentKey) {
+function openspecStart(feature, agentKey) {
   if (!feature) {
     console.log('\n  Error: Missing feature description.');
-    console.log('  Usage: edp speckit start "<feature>" <agent>\n');
+    console.log('  Usage: edp openspec start "<feature>" <agent>\n');
     process.exit(1);
   }
 
@@ -451,10 +454,10 @@ function speckitStart(feature, agentKey) {
     process.exit(1);
   }
 
-  // Initialize .specify if needed
-  const specifyDir = path.join(cwd, SPECIFY_DIR);
-  if (!fs.existsSync(specifyDir)) {
-    speckitInit();
+  // Initialize openspec if needed
+  const openspecDir = path.join(cwd, OPENSPEC_DIR);
+  if (!fs.existsSync(openspecDir)) {
+    openspecInit();
   }
 
   // Switch agent
@@ -463,7 +466,7 @@ function speckitStart(feature, agentKey) {
   fs.writeFileSync(path.join(cwd, '.cursorrules'), agentContent);
 
   // Create prompt file for the AI
-  const promptContent = `# SpecKit Auto-Flow
+  const promptContent = `# OpenSpec Auto-Flow
 
 ## Feature
 ${feature}
@@ -472,51 +475,48 @@ ${feature}
 ${agent.name}
 
 ## Instructions
-Execute the full SpecKit workflow automatically:
+Execute the full OpenSpec workflow automatically:
 
 1. [x] Agent switched to ${agent.name}
-2. [ ] Run /speckit.specify with the feature above
-3. [ ] Run /speckit.clarify
-4. [ ] Run /speckit.plan
-5. [ ] Run /speckit.tasks
-6. [ ] Run /speckit.implement
+2. [ ] Run /opsx:propose with the feature above
+3. [ ] Run /opsx:apply to implement
 
 **IMPORTANT**: Execute all steps sequentially WITHOUT asking for confirmation between them.
-Show progress: [1/6], [2/6], etc.
+Show progress: [1/3], [2/3], [3/3].
 `;
 
-  const promptPath = path.join(specifyDir, 'prompt.md');
+  const promptPath = path.join(openspecDir, 'prompt.md');
   fs.writeFileSync(promptPath, promptContent);
 
-  console.log('\n  SpecKit workflow initialized!\n');
+  console.log('\n  OpenSpec workflow initialized!\n');
   console.log('  Agent: ' + agent.name);
   console.log('  Feature: ' + feature);
-  console.log('\n  ✓ Created .specify/prompt.md');
+  console.log('\n  ✓ Created openspec/prompt.md');
   console.log('  ✓ Switched CLAUDE.md');
   console.log('  ✓ Switched .cursorrules\n');
   console.log('  Now tell Claude/Cursor:');
   console.log('  ──────────────────────────');
-  console.log('  "Read .specify/prompt.md and execute the full workflow"\n');
+  console.log('  "Read openspec/prompt.md and execute the full workflow"\n');
   console.log('  Or use the slash command:');
-  console.log('  /edp speckit start\n');
+  console.log('  /opsx:propose "' + feature + '"\n');
 }
 
-function handleSpeckit(args) {
+function handleOpenspec(args) {
   const subCommand = args[0];
 
   if (!subCommand || subCommand === 'help' || subCommand === '--help') {
-    showSpeckitHelp();
+    showOpenspecHelp();
   } else if (subCommand === 'init') {
-    speckitInit();
+    openspecInit();
   } else if (subCommand === 'status') {
-    speckitStatus();
+    openspecStatus();
   } else if (subCommand === 'start') {
     const feature = args[1];
     const agentKey = args[2];
-    speckitStart(feature, agentKey);
+    openspecStart(feature, agentKey);
   } else {
-    console.log('\n  Unknown speckit command: ' + subCommand);
-    showSpeckitHelp();
+    console.log('\n  Unknown openspec command: ' + subCommand);
+    showOpenspecHelp();
   }
 }
 
@@ -528,14 +528,14 @@ function showHelp() {
   console.log('  edp install            Install agents (interactive)');
   console.log('  edp switch <agent>     Switch to a different agent');
   console.log('  edp list               List all available agents');
-  console.log('  edp speckit <cmd>      SpecKit workflow commands');
+  console.log('  edp openspec <cmd>     OpenSpec workflow commands');
   console.log('  edp memory <cmd>       Memory architecture commands');
   console.log('  edp help               Show this help\n');
   console.log('  Examples:');
   console.log('  ─────────');
   console.log('  edp switch backend');
   console.log('  edp switch frontend-reviewer');
-  console.log('  edp speckit start "feature" be');
+  console.log('  edp openspec start "feature" be');
   console.log('  edp memory init\n');
 }
 
@@ -553,8 +553,12 @@ async function main() {
       process.exit(1);
     }
     switchAgent(agentKey);
+  } else if (command === 'openspec') {
+    handleOpenspec(args.slice(1));
   } else if (command === 'speckit') {
-    handleSpeckit(args.slice(1));
+    // Backward compatibility
+    console.log('\n  Note: "speckit" is deprecated. Use "openspec" instead.\n');
+    handleOpenspec(args.slice(1));
   } else if (command === 'memory') {
     handleMemory(args.slice(1));
   } else if (command === 'list') {

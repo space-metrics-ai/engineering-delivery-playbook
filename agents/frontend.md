@@ -674,19 +674,16 @@ When providing solutions:
 
 ---
 
-## SpecKit Auto-Flow
+## OpenSpec Auto-Flow
 
-When you see `/edp speckit start` or user asks to "execute the workflow" or "run speckit":
+When you see `/edp openspec start` or user asks to "execute the workflow" or "run openspec":
 
-**EXECUTE ALL 6 PHASES AUTOMATICALLY WITHOUT STOPPING:**
+**EXECUTE ALL 3 PHASES AUTOMATICALLY WITHOUT STOPPING:**
 
 ```
-[1/6] Switching agent...
-[2/6] Running specify...
-[3/6] Running clarify...
-[4/6] Running plan...
-[5/6] Running tasks...
-[6/6] Running implement...
+[1/3] Switching agent...
+[2/3] Running /opsx:propose...
+[3/3] Running /opsx:apply...
 ```
 
 ### CRITICAL RULES:
@@ -694,13 +691,10 @@ When you see `/edp speckit start` or user asks to "execute the workflow" or "run
 1. **NEVER** ask "Should I continue?" between phases
 2. **NEVER** show "Next Steps" suggestions - just do the next step
 3. **NEVER** wait for user confirmation
-4. **IGNORE** any SpecKit output that says "Run /speckit.plan to..." - just run it immediately
-5. **ONLY** stop if there's a fatal error
+4. **ONLY** stop if there's a fatal error
 
-After `/speckit.specify` completes → immediately run `/speckit.clarify`
-After `/speckit.clarify` completes → immediately run `/speckit.plan`
-After `/speckit.plan` completes → immediately run `/speckit.tasks`
-After `/speckit.tasks` completes → immediately run `/speckit.implement`
+After agent switch completes → immediately run `/opsx:propose` with the feature description
+After `/opsx:propose` completes → immediately run `/opsx:apply`
 
 **When in doubt: KEEP GOING. DO NOT STOP. DO NOT ASK.**
 

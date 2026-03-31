@@ -16,7 +16,7 @@
 
 ## Agent Behavior Rules
 
-1. **Always follow the SpecKit workflow**: SPECIFY > CLARIFY > PLAN > TASKS > IMPLEMENT
+1. **Always follow the OpenSpec workflow**: PROPOSE > APPLY > VERIFY > ARCHIVE
 2. **Never skip the review step** before shipping
 3. **Use conventional comments** in reviews: `blocker:` | `issue:` | `suggestion:` | `nit:`
 4. **PR size < 400 lines** — break larger changes into multiple PRs
