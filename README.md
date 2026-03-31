@@ -66,41 +66,28 @@ curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delive
 
 ### 2. Start building
 
-Just describe what you need in natural language — be as detailed as you want:
-
-```bash
-eng-play openspec start "create an API to handle Apple Health, I need endpoints to retrieve data in this way:
-  - /api/apple-health/running/jun/26 returns all the days with the total in kilometers that the user has had run;
-  - /api/apple-health/running post to send the runnings
-  - /api/apple-health/workouts/jul/25 returns all the days with the data;
-  - /api/apple-health/workouts/apr/26 post to send the workouts
-  - /api/apple-health/calories/may/26 returns the calories burned by daily in the month
-  - /api/apple-health/summary/monthly|yearly|daily/last-12-months
-  the project must be done in rust, and we must use our main agent for this task;"
-```
-
-The CLI auto-detects the best agent (Rust in this case via `Cargo.toml`), generates a structured prompt, and kicks off the OpenSpec workflow.
-
-> **Tip:** For even better results, structure your prompt with `context:`, `goals:`, and `requirements:`:
+Describe what you need — the more structured, the better the output. Use `context:`, `goals:`, and `requirements:` to guide the AI:
 
 ```bash
 eng-play openspec start "
-  context: We have an Apple Health integration that receives data from iOS devices.
-  goals: Build a REST API to store and query health metrics (running, workouts, calories).
+  context: We have a multi-tenant SaaS platform with a billing service.
+  goals: Add a usage-based billing API that tracks API calls per tenant and
+         generates monthly invoices.
   requirements:
-    - GET /api/apple-health/running/:month/:year — daily totals in km
-    - POST /api/apple-health/running — submit running entries
-    - GET /api/apple-health/workouts/:month/:year — daily workout data
-    - POST /api/apple-health/workouts/:month/:year — submit workouts
-    - GET /api/apple-health/calories/:month/:year — daily calories burned
-    - GET /api/apple-health/summary/:period/last-12-months — monthly|yearly|daily aggregation
-    - Use Rust with Actix-Web and SQLx
-    - All endpoints require JWT authentication"
+    - POST /api/billing/usage — record API call usage per tenant
+    - GET /api/billing/usage/:tenant_id/:month/:year — usage breakdown by day
+    - GET /api/billing/invoices/:tenant_id — list invoices with status
+    - POST /api/billing/invoices/generate — generate monthly invoices for all tenants
+    - Pricing tiers: free (1k calls), pro (100k), enterprise (unlimited)
+    - Idempotent usage recording to handle retries
+    - All endpoints require API key authentication"
 ```
+
+The CLI auto-detects the best agent from your codebase (`Cargo.toml` → Rust, `go.mod` → Go, etc.), generates a structured prompt, and kicks off the OpenSpec workflow.
 
 ```bash
 # Or specify an agent explicitly
-eng-play openspec start "responsive dashboard" fe
+eng-play openspec start "responsive analytics dashboard" fe
 ```
 
 ---
@@ -432,15 +419,15 @@ When you omit the agent from `eng-play openspec start`, the CLI scans your codeb
 
 ```markdown
 ## Environment
-- Project: apple-health-api
-- Agent: Rust Engineer (auto-detected via Cargo.toml)
+- Project: billing-service
+- Agent: Go Engineer (auto-detected via go.mod)
 - Git: yes | Tests: yes | CI/CD: yes | Memory: .AGENT/ active
 
 ## Goal
-Build a REST API to store and query Apple Health metrics (running, workouts, calories)
+Add usage-based billing API that tracks API calls per tenant and generates monthly invoices
 
 ## State
-- Agent: Rust Engineer (switched)
+- Agent: Go Engineer (switched)
 - OpenSpec: initialized
 
 ## Actions
