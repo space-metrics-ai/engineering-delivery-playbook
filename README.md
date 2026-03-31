@@ -66,15 +66,42 @@ curl -fsSL https://raw.githubusercontent.com/space-metrics-ai/engineering-delive
 
 ### 2. Start building
 
-```bash
-# Just describe the feature — agent is auto-detected from your codebase
-eng-play openspec start "Add avatar upload: max 5MB, JPEG/PNG, resize 200x200, S3 storage"
+Just describe what you need in natural language — be as detailed as you want:
 
+```bash
+eng-play openspec start "create an API to handle Apple Health, I need endpoints to retrieve data in this way:
+  - /api/apple-health/running/jun/26 returns all the days with the total in kilometers that the user has had run;
+  - /api/apple-health/running post to send the runnings
+  - /api/apple-health/workouts/jul/25 returns all the days with the data;
+  - /api/apple-health/workouts/apr/26 post to send the workouts
+  - /api/apple-health/calories/may/26 returns the calories burned by daily in the month
+  - /api/apple-health/summary/monthly|yearly|daily/last-12-months
+  the project must be done in rust, and we must use our main agent for this task;"
+```
+
+The CLI auto-detects the best agent (Rust in this case via `Cargo.toml`), generates a structured prompt, and kicks off the OpenSpec workflow.
+
+> **Tip:** For even better results, structure your prompt with `context:`, `goals:`, and `requirements:`:
+
+```bash
+eng-play openspec start "
+  context: We have an Apple Health integration that receives data from iOS devices.
+  goals: Build a REST API to store and query health metrics (running, workouts, calories).
+  requirements:
+    - GET /api/apple-health/running/:month/:year — daily totals in km
+    - POST /api/apple-health/running — submit running entries
+    - GET /api/apple-health/workouts/:month/:year — daily workout data
+    - POST /api/apple-health/workouts/:month/:year — submit workouts
+    - GET /api/apple-health/calories/:month/:year — daily calories burned
+    - GET /api/apple-health/summary/:period/last-12-months — monthly|yearly|daily aggregation
+    - Use Rust with Actix-Web and SQLx
+    - All endpoints require JWT authentication"
+```
+
+```bash
 # Or specify an agent explicitly
 eng-play openspec start "responsive dashboard" fe
 ```
-
-That's it. The CLI auto-detects the best agent, generates a structured prompt, and kicks off the OpenSpec workflow.
 
 ---
 
@@ -91,7 +118,14 @@ PROPOSE ──▶ DESIGN ──▶ TASKS ──▶ IMPLEMENT ──▶ REVIEW �
 ### 1. Propose
 
 ```bash
-eng-play openspec start "Add remember me checkbox with 30-day sessions"
+eng-play openspec start "
+  context: Our auth system uses JWT tokens with 1-hour expiration.
+  goals: Add a 'remember me' option so users stay logged in longer.
+  requirements:
+    - Add remember me checkbox to login form
+    - When checked, issue a 30-day refresh token
+    - Store refresh tokens securely (httpOnly cookie)
+    - Add token rotation on each refresh"
 ```
 
 Generates `openspec/prompt.md` with Environment, Goal, State, Actions. Then tell your AI:
@@ -398,15 +432,15 @@ When you omit the agent from `eng-play openspec start`, the CLI scans your codeb
 
 ```markdown
 ## Environment
-- Project: my-app
-- Agent: Backend Engineer (auto-detected)
+- Project: apple-health-api
+- Agent: Rust Engineer (auto-detected via Cargo.toml)
 - Git: yes | Tests: yes | CI/CD: yes | Memory: .AGENT/ active
 
 ## Goal
-Add user authentication with OAuth
+Build a REST API to store and query Apple Health metrics (running, workouts, calories)
 
 ## State
-- Agent: Backend Engineer (switched)
+- Agent: Rust Engineer (switched)
 - OpenSpec: initialized
 
 ## Actions
