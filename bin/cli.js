@@ -256,6 +256,24 @@ function installMemory() {
   return true;
 }
 
+function installOpenspec() {
+  const cwd = process.cwd();
+  const openspecDir = path.join(cwd, OPENSPEC_DIR);
+
+  if (fs.existsSync(openspecDir)) {
+    console.log('  openspec/ directory already exists. Skipping.');
+    return;
+  }
+
+  const dirs = ['specs', 'changes'];
+  fs.mkdirSync(openspecDir, { recursive: true });
+  dirs.forEach(dir => {
+    fs.mkdirSync(path.join(openspecDir, dir), { recursive: true });
+  });
+
+  console.log('  ✓ Installed openspec/ directory\n');
+}
+
 function memoryInit(force) {
   const cwd = process.cwd();
   const targetDir = path.join(cwd, AGENT_MEMORY_DIR);
@@ -394,6 +412,9 @@ async function install() {
 
     // Install .AGENT/ memory architecture
     installMemory();
+
+    // Install openspec/ directory
+    installOpenspec();
 
     const selectedAgent = await selectAgent();
 
