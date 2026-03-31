@@ -19,7 +19,7 @@
 <p align="center">
   <a href="https://github.com/space-metrics-ai/engineering-delivery-playbook/releases"><img src="https://img.shields.io/github/v/release/space-metrics-ai/engineering-delivery-playbook" alt="Release"></a>
   <a href="https://www.npmjs.com/package/eng-delivery-playbook"><img src="https://img.shields.io/npm/v/eng-delivery-playbook" alt="npm"></a>
-  <img src="https://img.shields.io/badge/agents-10-blue" alt="Agents">
+  <img src="https://img.shields.io/badge/agents-15-blue" alt="Agents">
   <img src="https://img.shields.io/badge/knowledge_bases-14-green" alt="Knowledge Bases">
   <img src="https://img.shields.io/badge/memory-5_types-red" alt="Memory Types">
   <img src="https://img.shields.io/badge/openspec-integrated-purple" alt="OpenSpec">
@@ -34,7 +34,7 @@ A turnkey framework that gives your AI coding agents (Claude Code, Cursor, Copil
 
 | Feature | What |
 |---------|------|
-| **10 agents** | Backend, Frontend, Mobile, DevOps engineers + reviewers + consultant |
+| **15 agents** | Java, Kotlin, Go, Python, Rust, Node, React, Vue, Android, iOS, Flutter, DevOps, Reviewer, Consultant, AI Metrics |
 | **14 knowledge bases** | Design patterns, testing, system design, CLAUDE.md best practices |
 | **5-type memory** | Persistent context that survives across sessions |
 | **OpenSpec** | Spec-driven development — AI builds the *right* thing |
@@ -132,34 +132,43 @@ gh pr create
 
 ## Agents
 
-### Engineers
+### Backend
 
-| Agent | Technologies | Alias |
-|-------|-------------|-------|
-| **Backend** | Java, Go, Node.js, TypeScript, Kotlin, Python | `be` |
-| **Frontend** | React, Vue.js, TypeScript, Next.js, Nuxt | `fe` |
-| **Mobile** | Flutter, Android (Kotlin), iOS (Swift) | `mob` |
-| **DevOps** | Kubernetes, Terraform, Docker, AWS/GCP/Azure | `ops` |
-
-### Reviewers
-
-| Agent | Focus | Alias |
+| Agent | Stack | Alias |
 |-------|-------|-------|
-| **Backend** | Security, performance, patterns | `be-review` |
-| **Frontend** | Accessibility, Core Web Vitals | `fe-review` |
-| **Mobile** | Platform guidelines, performance | `mob-review` |
-| **DevOps** | Security, reliability, IaC | `ops-review` |
+| **Java** | Spring Boot, JPA, Maven/Gradle | `java` |
+| **Kotlin** | Ktor, Spring, Coroutines | `kt` |
+| **Go** | stdlib, Gin/Chi, GORM/sqlx | `go` |
+| **Python** | FastAPI, Django, SQLAlchemy | `py` |
+| **Rust** | Actix/Axum, Tokio, SQLx | `rs` |
+| **Node.js** | Express, Fastify, NestJS, TypeScript | `ts` |
 
-### Specialists
+### Frontend
+
+| Agent | Stack | Alias |
+|-------|-------|-------|
+| **React** | React 19, Next.js 15, TanStack Query | `next` |
+| **Vue** | Vue 3, Nuxt 3, Pinia | `nuxt` |
+
+### Mobile
+
+| Agent | Stack | Alias |
+|-------|-------|-------|
+| **Android** | Kotlin, Jetpack Compose, Hilt | `droid` |
+| **iOS** | Swift, SwiftUI, Combine | `swift` |
+| **Flutter** | Dart, Riverpod/Bloc, go_router | `fl`, `dart` |
+
+### Infrastructure & Review
 
 | Agent | Purpose | Alias |
 |-------|---------|-------|
-| **Tech Consultant** | Architecture advice (no code) | `consult` |
-| **AI Metrics** | Track AI usage and ROI | — |
+| **DevOps** | K8s, Terraform, Docker, CI/CD | `ops` |
+| **Reviewer** | Tech-agnostic code review | `review` |
+| **Consultant** | Architecture advice (no code) | `consult` |
 
 ```bash
-eng-play switch backend    # Full name
-eng-play switch be         # Alias
+eng-play switch java       # Full name
+eng-play switch py         # Alias
 eng-play list              # Show all
 ```
 
@@ -377,10 +386,18 @@ When you omit the agent from `eng-play openspec start`, the CLI scans your codeb
 
 | Signal | Agent |
 |--------|-------|
-| `package.json` with React/Vue/Next | Frontend |
-| `pom.xml`, `go.mod`, `requirements.txt` | Backend |
-| `pubspec.yaml`, `Podfile`, `AndroidManifest.xml` | Mobile |
-| `Dockerfile`, `terraform.tf`, `.github/workflows` | DevOps |
+| `Cargo.toml` | Rust |
+| `go.mod`, `cmd/`, `internal/` | Go |
+| `pom.xml`, `build.gradle` | Java |
+| `build.gradle.kts` | Kotlin |
+| `pyproject.toml`, `requirements.txt` | Python |
+| `pubspec.yaml` | Flutter |
+| `Podfile`, `Package.swift` | iOS |
+| `AndroidManifest.xml` | Android |
+| `package.json` + React/Next | React |
+| `package.json` + Vue/Nuxt | Vue |
+| `package.json` + Express/Fastify/NestJS | Node.js |
+| `main.tf`, `Dockerfile` | DevOps |
 
 ### Generated Prompt Format
 
@@ -467,10 +484,11 @@ Add user authentication with OAuth
 
 ```
 your-project/
-├── agents/                      # 10 AI agent prompts
-│   ├── backend.md
-│   ├── frontend.md
-│   ├── ...
+├── agents/                      # 15 technology-specific agents
+│   ├── java.md, kotlin.md, go.md, python.md, rust.md, node.md
+│   ├── react.md, vue.md
+│   ├── android.md, ios.md, flutter.md
+│   ├── devops.md, reviewer.md, consultant.md, ai-metrics.md
 │   └── knowledge/               # 14 knowledge bases
 ├── .AGENT/                      # 5-type cognitive memory
 │   ├── working_memory/
@@ -487,13 +505,19 @@ your-project/
 
 ## Changelog
 
+### 2.1.0
+- **15 technology-specific agents** replace 4 generic ones
+- Java, Kotlin, Go, Python, Rust, Node.js, React, Vue, Android, iOS, Flutter
+- Unified Code Reviewer replaces 4 separate reviewers
+- Lean agents (~100 lines each) — no knowledge base duplication
+- Smart auto-detect maps to specific technology (Cargo.toml → Rust, go.mod → Go, etc.)
+
 ### 2.0.0
 - **`eng-play` CLI** replaces `edp` (backward compatible alias kept)
 - **Auto-detect agent** — `eng-play openspec start` scans codebase, no agent arg needed
 - **Structured prompt format** — Environment/Goal/State/Actions in `openspec/prompt.md`
 - **Lean CLAUDE.md** — ~30 lines (~600 tokens) following Boris Cherny's best practices
 - **CLAUDE.md Best Practices** knowledge base added
-- Agent switch generates lean CLAUDE.md (pointer) instead of full dump (10k+ tokens)
 
 ### 1.5.0
 - OpenSpec integration replaces SpecKit

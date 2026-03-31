@@ -9,30 +9,45 @@ const AGENT_MEMORY_DIR = '.AGENT';
 const OPENSPEC_DIR = 'openspec';
 
 const AGENTS = {
-  // Engineers
-  'backend': { name: 'Backend Engineer', file: 'backend.md' },
-  'frontend': { name: 'Frontend Engineer', file: 'frontend.md' },
-  'mobile': { name: 'Mobile Engineer', file: 'mobile.md' },
+  // Backend
+  'java': { name: 'Java Engineer', file: 'java.md' },
+  'kotlin': { name: 'Kotlin Engineer', file: 'kotlin.md' },
+  'go': { name: 'Go Engineer', file: 'go.md' },
+  'python': { name: 'Python Engineer', file: 'python.md' },
+  'rust': { name: 'Rust Engineer', file: 'rust.md' },
+  'node': { name: 'Node.js/TypeScript Engineer', file: 'node.md' },
+  // Frontend
+  'react': { name: 'React/Next.js Engineer', file: 'react.md' },
+  'vue': { name: 'Vue/Nuxt Engineer', file: 'vue.md' },
+  // Mobile
+  'android': { name: 'Android Engineer', file: 'android.md' },
+  'ios': { name: 'iOS Engineer', file: 'ios.md' },
+  'flutter': { name: 'Flutter Engineer', file: 'flutter.md' },
+  // Infrastructure
   'devops': { name: 'DevOps Engineer', file: 'devops.md' },
-  // Reviewers
-  'backend-reviewer': { name: 'Backend Reviewer', file: 'backend-reviewer.md' },
-  'frontend-reviewer': { name: 'Frontend Reviewer', file: 'frontend-reviewer.md' },
-  'mobile-reviewer': { name: 'Mobile Reviewer', file: 'mobile-reviewer.md' },
-  'devops-reviewer': { name: 'DevOps Reviewer', file: 'devops-reviewer.md' },
-  // Specialists
+  // Review & Specialists
+  'reviewer': { name: 'Code Reviewer', file: 'reviewer.md' },
   'consultant': { name: 'Tech Consultant', file: 'consultant.md' },
 };
 
 // Aliases for convenience
 const ALIASES = {
-  'be': 'backend',
-  'fe': 'frontend',
-  'mob': 'mobile',
+  'kt': 'kotlin',
+  'py': 'python',
+  'rs': 'rust',
+  'ts': 'node',
+  'typescript': 'node',
+  'nodejs': 'node',
+  'nextjs': 'react',
+  'next': 'react',
+  'nuxt': 'vue',
+  'droid': 'android',
+  'swift': 'ios',
+  'fl': 'flutter',
+  'dart': 'flutter',
   'ops': 'devops',
-  'be-review': 'backend-reviewer',
-  'fe-review': 'frontend-reviewer',
-  'mob-review': 'mobile-reviewer',
-  'ops-review': 'devops-reviewer',
+  'infra': 'devops',
+  'review': 'reviewer',
   'consult': 'consultant',
 };
 
@@ -122,10 +137,12 @@ function switchAgent(agentKey) {
     console.log('\n  Unknown agent: ' + agentKey);
     console.log('\n  Available agents:');
     console.log('  ─────────────────');
-    console.log('  Engineers:  backend, frontend, mobile, devops');
-    console.log('  Reviewers:  backend-reviewer, frontend-reviewer, mobile-reviewer, devops-reviewer');
-    console.log('  Specialist: consultant');
-    console.log('\n  Aliases:    be, fe, mob, ops, be-review, fe-review, mob-review, ops-review, consult\n');
+    console.log('  Backend:    java, kotlin (kt), go, python (py), rust (rs), node (ts)');
+    console.log('  Frontend:   react (next), vue (nuxt)');
+    console.log('  Mobile:     android (droid), ios (swift), flutter (fl, dart)');
+    console.log('  Infra:      devops (ops)');
+    console.log('  Review:     reviewer (review)');
+    console.log('  Specialist: consultant (consult)\n');
     process.exit(1);
   }
 
@@ -156,16 +173,24 @@ function switchAgent(agentKey) {
 function listAgents() {
   console.log('\n  Available agents:');
   console.log('  ─────────────────\n');
-  console.log('  Engineers:');
-  console.log('    backend          Backend Engineer (be)');
-  console.log('    frontend         Frontend Engineer (fe)');
-  console.log('    mobile           Mobile Engineer (mob)');
-  console.log('    devops           DevOps Engineer (ops)');
-  console.log('\n  Reviewers:');
-  console.log('    backend-reviewer   Backend Reviewer (be-review)');
-  console.log('    frontend-reviewer  Frontend Reviewer (fe-review)');
-  console.log('    mobile-reviewer    Mobile Reviewer (mob-review)');
-  console.log('    devops-reviewer    DevOps Reviewer (ops-review)');
+  console.log('  Backend:');
+  console.log('    java             Java / Spring Boot (java)');
+  console.log('    kotlin           Kotlin / Ktor (kt)');
+  console.log('    go               Go (go)');
+  console.log('    python           Python / FastAPI / Django (py)');
+  console.log('    rust             Rust / Actix / Axum (rs)');
+  console.log('    node             Node.js / TypeScript (ts)');
+  console.log('\n  Frontend:');
+  console.log('    react            React / Next.js (next)');
+  console.log('    vue              Vue / Nuxt (nuxt)');
+  console.log('\n  Mobile:');
+  console.log('    android          Android / Kotlin (droid)');
+  console.log('    ios              iOS / Swift (swift)');
+  console.log('    flutter          Flutter / Dart (fl, dart)');
+  console.log('\n  Infrastructure:');
+  console.log('    devops           DevOps / K8s / Terraform (ops)');
+  console.log('\n  Review:');
+  console.log('    reviewer         Code Reviewer (review)');
   console.log('\n  Specialists:');
   console.log('    consultant       Tech Consultant (consult)');
   console.log('\n  Usage: eng-play switch <agent>\n');
@@ -467,67 +492,56 @@ function openspecStatus() {
 
 function detectAgent() {
   const cwd = process.cwd();
-  const indicators = {
-    backend: [
-      'pom.xml', 'build.gradle', 'go.mod', 'Gemfile', 'requirements.txt',
-      'Pipfile', 'setup.py', 'pyproject.toml', 'Cargo.toml',
-    ],
-    frontend: [
-      'next.config.js', 'next.config.ts', 'nuxt.config.ts', 'vite.config.ts',
-      'vue.config.js', 'angular.json', 'svelte.config.js',
-    ],
-    mobile: [
-      'pubspec.yaml', 'Podfile', 'build.gradle.kts',
-      'AndroidManifest.xml', 'Info.plist',
-    ],
-    devops: [
-      'Dockerfile', 'docker-compose.yml', 'terraform.tf', 'main.tf',
-      'Jenkinsfile', 'ansible.cfg', '.github/workflows',
-    ],
-  };
 
-  const scores = { backend: 0, frontend: 0, mobile: 0, devops: 0 };
+  // Direct file → agent mapping (strongest signals first)
+  const directMap = [
+    // Mobile
+    { files: ['pubspec.yaml'], agent: 'flutter' },
+    { files: ['Podfile', 'Package.swift', 'Info.plist'], agent: 'ios' },
+    { files: ['AndroidManifest.xml'], agent: 'android' },
+    // Backend languages
+    { files: ['Cargo.toml'], agent: 'rust' },
+    { files: ['go.mod'], agent: 'go' },
+    { files: ['pom.xml'], agent: 'java' },
+    { files: ['build.gradle.kts'], agent: 'kotlin' },
+    { files: ['build.gradle'], agent: 'java' },
+    { files: ['pyproject.toml', 'requirements.txt', 'Pipfile', 'setup.py'], agent: 'python' },
+    // Infra
+    { files: ['main.tf', 'terraform.tf'], agent: 'devops' },
+  ];
 
-  // Check package.json for frontend clues
+  for (const { files, agent } of directMap) {
+    if (files.some(f => fs.existsSync(path.join(cwd, f)))) {
+      return agent;
+    }
+  }
+
+  // Check package.json for framework-specific detection
   const pkgPath = path.join(cwd, 'package.json');
   if (fs.existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
       const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
-      const feFrameworks = ['react', 'vue', 'next', 'nuxt', 'angular', 'svelte', '@angular/core'];
-      const beFrameworks = ['express', 'fastify', 'koa', 'nestjs', '@nestjs/core', 'hapi'];
-      if (deps.some(d => feFrameworks.includes(d))) scores.frontend += 3;
-      if (deps.some(d => beFrameworks.includes(d))) scores.backend += 3;
+
+      // React/Next.js
+      if (deps.some(d => ['react', 'next', '@next/core'].includes(d))) return 'react';
+      // Vue/Nuxt
+      if (deps.some(d => ['vue', 'nuxt', '@vue/core'].includes(d))) return 'vue';
+      // Node.js backend
+      if (deps.some(d => ['express', 'fastify', '@nestjs/core', 'koa', 'hono'].includes(d))) return 'node';
     } catch (e) { /* ignore */ }
   }
 
-  // Check file indicators
-  for (const [agent, files] of Object.entries(indicators)) {
-    for (const file of files) {
-      if (fs.existsSync(path.join(cwd, file))) {
-        scores[agent] += 2;
-      }
-    }
-  }
+  // Directory pattern fallbacks
+  if (fs.existsSync(path.join(cwd, 'cmd')) || fs.existsSync(path.join(cwd, 'internal'))) return 'go';
+  if (fs.existsSync(path.join(cwd, 'src/main/java'))) return 'java';
+  if (fs.existsSync(path.join(cwd, 'src/main/kotlin'))) return 'kotlin';
+  if (fs.existsSync(path.join(cwd, 'app/page.tsx')) || fs.existsSync(path.join(cwd, 'app/layout.tsx'))) return 'react';
+  if (fs.existsSync(path.join(cwd, 'pages')) && fs.existsSync(path.join(cwd, 'nuxt.config.ts'))) return 'vue';
+  if (fs.existsSync(path.join(cwd, 'Dockerfile'))) return 'devops';
 
-  // Check src/ directory patterns
-  const srcPatterns = {
-    frontend: ['src/components', 'src/pages', 'src/app', 'app/page.tsx', 'app/layout.tsx'],
-    backend: ['src/main', 'src/controllers', 'src/routes', 'src/services', 'cmd/', 'internal/'],
-    mobile: ['lib/', 'ios/', 'android/'],
-  };
-
-  for (const [agent, dirs] of Object.entries(srcPatterns)) {
-    for (const dir of dirs) {
-      if (fs.existsSync(path.join(cwd, dir))) {
-        scores[agent] += 1;
-      }
-    }
-  }
-
-  // Return the agent with highest score, default to backend
-  const best = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
-  return best[1] > 0 ? best[0] : 'backend';
+  // Default
+  return 'node';
 }
 
 function getEnvironmentContext() {
@@ -697,9 +711,9 @@ function showHelp() {
   console.log('  eng-play help               Show this help\n');
   console.log('  Examples:');
   console.log('  ─────────');
-  console.log('  eng-play switch backend');
-  console.log('  eng-play switch frontend-reviewer');
-  console.log('  eng-play openspec start "feature" be');
+  console.log('  eng-play switch java');
+  console.log('  eng-play switch py');
+  console.log('  eng-play openspec start "user auth"');
   console.log('  eng-play memory init\n');
 }
 
