@@ -1,7 +1,7 @@
 {
   "name": "eng-delivery-playbook",
-  "version": "2.1.2",
-  "description": "AI-powered agents and knowledge bases to elevate your engineering team's delivery",
+  "version": "3.0.0",
+  "description": "Curated context profiles and knowledge bases for AI coding tools",
   "author": "Space Metrics AI",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,7 @@
   "homepage": "https://github.com/space-metrics-ai/engineering-delivery-playbook",
   "keywords": [
     "ai",
-    "agents",
+    "profiles",
     "engineering",
     "delivery",
     "playbook",
@@ -26,7 +26,7 @@
   },
   "files": [
     "bin",
-    "agents",
+    "profiles",
     ".AGENT"
   ],
   "engines": {

@@ -177,14 +177,14 @@ OpenSpec generates spec deltas that show what changed in system intent. This ena
 
 ## Integration with EDP
 
-The Engineering Delivery Playbook integrates OpenSpec with agent switching:
+The Engineering Delivery Playbook integrates OpenSpec with profile switching:
 
 ```bash
 # Full automated workflow
 eng-play openspec start "user authentication with OAuth" be
 
 # Manual workflow
-eng-play switch backend           # Switch to Backend agent
+eng-play switch backend           # Switch to Backend profile
 /opsx:propose "feature"      # Create proposal
 /opsx:apply                  # Implement
 eng-play switch be-review         # Switch to Reviewer

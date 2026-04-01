@@ -26,10 +26,10 @@ Starts the full OpenSpec workflow automatically.
 
 **Syntax:**
 ```
-/eng-play openspec start "<feature-description>" <agent>
+/eng-play openspec start "<feature-description>" <profile>
 ```
 
-**Agents:** `be` (backend), `fe` (frontend), `mob` (mobile), `ops` (devops)
+**Profiles:** `be` (backend), `fe` (frontend), `mob` (mobile), `ops` (devops)
 
 **Example:**
 ```
@@ -43,9 +43,9 @@ Starts the full OpenSpec workflow automatically.
 When triggered, execute ALL phases in sequence:
 
 ```
-[1/3] Switching agent...
+[1/3] Switching profile...
 ```
-Switch to the specified agent.
+Switch to the specified profile.
 
 ```
 [2/3] Running /opsx:propose...
